@@ -2,27 +2,63 @@ let videoElement = null;
 let stream = null;
 
 function startMirroring() {
-
     navigator.mediaDevices.getUserMedia({ video: true })
         .then(function(mediaStream) {
             stream = mediaStream;
+
+            // 컨테이너 생성
+            const container = document.createElement('div');
+            container.style.position = 'fixed';
+            container.style.right = '0px';
+            container.style.top = '0px';
+            container.style.width = '200px'; // 크기 조절
+            container.style.height = '150px'; // 비디오 높이와 동일하게 설정
+            container.style.zIndex = '1000'; // 다른 요소 위에 표시
+
+            // 비디오 요소 생성 및 설정
             videoElement = document.createElement('video');
             videoElement.srcObject = stream;
+            videoElement.style.width = '200px';
+            videoElement.style.height = '150px';
             videoElement.play();
 
-            // CSS 스타일 설정
-            videoElement.style.position = 'fixed';
-            videoElement.style.right = '0px';
-            videoElement.style.top = '0px';
-            videoElement.style.width = '200px'; // 크기 조절
-            videoElement.style.zIndex = '1000'; // 다른 요소 위에 표시
+            // 오버레이 레이어 생성
+            const overlay = document.createElement('div');
+            overlay.style.position = 'absolute';
+            overlay.style.width = '200px';
+            overlay.style.height = '150px';
+            overlay.style.top = '0px';
+            overlay.style.left = '0px';
 
-            document.body.appendChild(videoElement);
+            // 점 두 개 생성 및 스타일 설정
+            const dot1 = document.createElement('div');
+            const dot2 = document.createElement('div');
+            [dot1, dot2].forEach(dot => {
+                dot.style.width = '10px';
+                dot.style.height = '10px';
+                dot.style.backgroundColor = 'red';
+                dot.style.borderRadius = '50%';
+                dot.style.position = 'absolute';
+            });
+
+            // 점 위치 설정
+            dot1.style.top = '25%';
+            dot1.style.left = '25%';
+            dot2.style.top = '25%';
+            dot2.style.right = '25%';
+
+            // 요소를 DOM에 추가
+            overlay.appendChild(dot1);
+            overlay.appendChild(dot2);
+            container.appendChild(videoElement);
+            container.appendChild(overlay);
+            document.body.appendChild(container);
         })
         .catch(function(err) {
             console.log('Error: ' + err);
         });
 }
+
 
 function stopMirroring() {
     if (videoElement) {
