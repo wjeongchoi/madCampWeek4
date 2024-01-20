@@ -1,0 +1,21 @@
+{
+  "manifest_version": 2,
+  "name": "Webcam Mirroring",
+  "version": "1.0",
+  "description": "Displays webcam video in the top right corner of the screen.",
+  "permissions": ["activeTab", "tabs", "videoCapture","storage"],
+  "options_page": "options.html",
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content-script.js"]
+    }
+  ],
+  "browser_action": {
+    "default_popup": "popup.html"
+  }
+}
