@@ -2,6 +2,10 @@ let videoElement = null;
 let stream = null;
 
 function startMirroring() {
+    chrome.storage.sync.get(['videoWidth', 'videoHeight'], function(items) {
+        const videoWidth = items.videoWidth || 200;
+        const videoHeight = items.videoHeight || 150;
+    
     navigator.mediaDevices.getUserMedia({ video: true })
         .then(function(mediaStream) {
             stream = mediaStream;
@@ -11,22 +15,22 @@ function startMirroring() {
             container.style.position = 'fixed';
             container.style.right = '0px';
             container.style.top = '0px';
-            container.style.width = '200px'; // 크기 조절
-            container.style.height = '150px'; // 비디오 높이와 동일하게 설정
+            container.style.width = videoWidth; // 크기 조절
+            container.style.height = videoHeight; // 비디오 높이와 동일하게 설정
             container.style.zIndex = '1000'; // 다른 요소 위에 표시
 
             // 비디오 요소 생성 및 설정
             videoElement = document.createElement('video');
             videoElement.srcObject = stream;
-            videoElement.style.width = '200px';
-            videoElement.style.height = '150px';
+            videoElement.style.width = videoWidth;
+            videoElement.style.height = videoHeight;
             videoElement.play();
 
             // 오버레이 레이어 생성
             const overlay = document.createElement('div');
             overlay.style.position = 'absolute';
-            overlay.style.width = '200px';
-            overlay.style.height = '150px';
+            overlay.style.width = videoWidth;
+            overlay.style.height = videoHeight;
             overlay.style.top = '0px';
             overlay.style.left = '0px';
 
@@ -57,6 +61,7 @@ function startMirroring() {
         .catch(function(err) {
             console.log('Error: ' + err);
         });
+    });
 }
 
 

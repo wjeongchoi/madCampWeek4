@@ -19,6 +19,8 @@ document.getElementById('start').addEventListener('click', function() {
         chrome.tabs.sendMessage(tabs[0].id, {action: "start"});
     });
     chrome.runtime.sendMessage({action: "setState", state: true});
+    console.log('start');
+
     updateUI(true);
 });
 
@@ -29,6 +31,7 @@ document.getElementById('stop').addEventListener('click', function() {
         chrome.tabs.sendMessage(tabs[0].id, {action: "stop"});
     });
     chrome.runtime.sendMessage({action: "setState", state: false});
+    console.log('stop');
     updateUI(false);
 });
 
