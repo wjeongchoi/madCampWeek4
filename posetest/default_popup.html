@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pose Estimation Extension</title>
+    <style>
+        body {
+            width: 320px; /* 팝업 페이지의 너비 조절 */
+        }
+    </style>
+</head>
+<body>
+    <!-- 웹캠 화면 및 랜드마크 표시 영역 -->
+    <div id="pose-estimation-container">
+        <video id="video" width="320" height="240" autoplay muted></video>
+        <canvas id="canvas" width="320" height="240"></canvas>
+    </div>
+
+    <!-- 외부 스크립트 로드 -->
+    <script src="mediapipe/camera_utils.js"></script>
+    <script src="mediapipe/control_utils/control_utils.js"></script>
+    <script src="mediapipe/drawing_utils/drawing_utils.js"></script>
+    <script src="mediapipe/pose.js"></script>
+
+    <!-- 컨텐츠 스크립트 로드 -->
+    <script src="content.js"></script>
+</body>
+</html>
