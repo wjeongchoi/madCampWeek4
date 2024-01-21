@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Pose Estimation</title>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils"></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose"></script>
+
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f0f0f0;
+      }
+
+      #video,
+      #canvas {
+        position: absolute;
+        transform: translate(-50%, -50%);
+        left: 50%;
+        top: 50%;
+      }
+
+      #video {
+        z-index: 1;
+      }
+
+      #canvas {
+        z-index: 2;
+        background: transparent;
+      }
+    </style>
+  </head>
+  <body>
+    <video id="video" width="640" height="480" autoplay muted></video>
+    <canvas id="canvas" width="640" height="480"></canvas>
+
+    <script>
+      const videoElement = document.getElementById("video");
+      const canvasElement = document.getElementById("canvas");
+      const canvasCtx = canvasElement.getContext("2d");
+
+      // MediaPipe Pose 설정
+      const pose = new Pose({
+        locateFile: (file) => {
+          return `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`;
+        },
+      });
+
+      pose.setOptions({
+        modelComplexity: 1,
+        smoothLandmarks: true,
+        enableSegmentation: false,
+        smoothSegmentation: false,
+        minDetectionConfidence: 0.5,
+        minTrackingConfidence: 0.5,
+      });
+
+      pose.onResults(onResults);
+
+      navigator.mediaDevices
+        .getUserMedia({ video: true })
+        .then((stream) => {
+          videoElement.srcObject = stream;
+
+          // 비디오 스트림이 준비되었을 때 play() 호출
+          videoElement.onloadedmetadata = () => {
+            videoElement.play();
+          };
+        })
+        .catch((error) => {
+          console.error("웹캠 접근 에러:", error);
+        });
+
+      // 결과 처리 함수
+      // 이미지 파일 경로
+      //const imageUrl = "https://picsum.photos/20/30"; // 이미지 파일의 경로를 설정해야 합니다.
+      const imageUrl = "head.png";
+
+      // 이전에 추가된 이미지 요소들을 저장할 배열
+      const previousImages = [];
+
+      // 랜드마크에 이미지 띄우는 함수
+        // 랜드마크에 이미지 띄우는 함수
+
+        const images = {}; // 각 랜드마크에 대한 이미지 객체 저장
+
+function placeImageAtLandmark(landmark, imageUrl, landmarkIndex) {
+    let image = images[landmarkIndex];
+
+    if (!image) {
+        // 새 이미지 객체 생성
+        image = new Image();
+        image.style.position = "absolute";
+        image.style.zIndex = "3";
+        document.body.appendChild(image);
+        images[landmarkIndex] = image;
+    }
+    image.src = imageUrl;
+
+    // 비디오 요소의 위치와 크기를 얻습니다.
+    const rect = videoElement.getBoundingClientRect();
+    console.log("Video Position - Left:", rect.left, "Top:", rect.top);
+    // 비디오 요소에 기반한 이미지의 위치를 계산합니다.
+      let x, y;
+
+    if(landmarkIndex == 12) {
+      x = rect.left + landmark.x * videoElement.width - image.width / 5;
+      y = rect.top + landmark.y * videoElement.height - image.height / 5;
+    } else { 
+      x = rect.left + landmark.x * videoElement.width - image.width / 1.5;
+      y = rect.top + landmark.y * videoElement.height - image.height / 1.5;
+    }
+
+    image.style.left = `${x}px`;
+    image.style.top = `${y}px`;
+
+    // 이미지 설정 및 표시
+    //image.src = imageUrl;
+
+    //const x = landmark.x * videoElement.width;
+    //const y = landmark.y * videoElement.height;
+
+    //image.style.left = `${x - image.width/2}px`;
+    //image.style.top = `${y - image.height/2}px`;
+    //image.style.left = `${x + image.width/2}px`;
+    //image.style.top = `${y + image.height/2}px`;
+}
+
+// 양쪽 어깨의 중간 지점을 계산하는 함수
+function calculateMiddlePoint(landmark1, landmark2) {
+  const rect = videoElement.getBoundingClientRect();
+  return {
+      x: (landmark1.x + landmark2.x) / 2,
+      y: (landmark1.y + landmark2.y) / 2
+      //y: rect.top + landmark1.y + landmark2.y/1.5
+  };
+}
+
+// 선을 그리는 함수
+function drawLine(ctx, start, end) {
+  ctx.beginPath();
+  ctx.moveTo(start.x * canvasElement.width, start.y * canvasElement.height);
+  ctx.lineTo(end.x * canvasElement.width, end.y * canvasElement.height);
+  ctx.strokeStyle = 'black';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+}
+
+function calculateAngle(landmark1, landmark2) {
+  // Δx와 Δy 계산
+  const deltaX = landmark2.x - landmark1.x;
+  const deltaY = landmark2.y - landmark1.y;
+
+  // 아크탄젠트로 각도(라디안) 계산
+  let angleRadians = Math.atan2(deltaY, deltaX);
+
+  // 라디안을 도로 변환
+  let angleDegrees = angleRadians * (180 / Math.PI);
+
+  // y축과의 각도 조정
+  angleDegrees = angleDegrees - 90; // y축과 수직인 각도로 조정
+  if (angleDegrees < 0) angleDegrees += 360; // 음수 각도를 양수로 변환
+
+  return angleDegrees;
+}
+
+
+
+// 결과 처리 함수
+function onResults(results) {
+    canvasCtx.save();
+    canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+
+    if (results.poseLandmarks) {
+        // 각 랜드마크에 대한 이미지 설정
+        const middleShoulder = calculateMiddlePoint(results.poseLandmarks[11], results.poseLandmarks[12]);
+        const angle = calculateAngle(results.poseLandmarks[7], middleShoulder);
+        console.log("Angle:", angle);
+        
+        
+        placeImageAtLandmark(middleShoulder, "body.png", 12); // 몸 랜드마크
+        if(angle < 10) {
+          placeImageAtLandmark(results.poseLandmarks[7], "head3.png", 0); // 머리 랜드마크
+        } else {
+          placeImageAtLandmark(results.poseLandmarks[7], "tutle.png", 0); // 머리 랜드마크
+        }
+        //placeImageAtLandmark(results.poseLandmarks[0], "https://picsum.photos/20/30", 0);11
+        // 양쪽 어깨의 중간 지점 계산 및 빨간 점 그리기
+        
+        drawLandmark(canvasCtx, middleShoulder);
+        
+        // 중간 어깨 지점과 머리 중심 지점을 연결하는 선 그리기
+        drawLine(canvasCtx, middleShoulder, results.poseLandmarks[0]);
+
+        // 나머지 랜드마크 그리기
+        results.poseLandmarks.forEach((landmark, index) => {
+            drawLandmark(canvasCtx, landmark);
+        });
+    }
+
+    canvasCtx.restore();
+}
+
+
+      function drawLandmark(ctx, landmark) {
+        const x = landmark.x * canvasElement.width;
+        const y = landmark.y * canvasElement.height;
+
+        ctx.beginPath();
+        ctx.arc(x, y, 5, 0, 2 * Math.PI);
+        ctx.fillStyle = "red";
+        ctx.fill();
+      }
+
+      // 웹캠에서 포즈 감지
+      const camera = new Camera(videoElement, {
+        onFrame: async () => {
+          await pose.send({ image: videoElement });
+        },
+        width: 640,
+        height: 480,
+      });
+      camera.start();
+    </script>
+  </body>
+</html>
