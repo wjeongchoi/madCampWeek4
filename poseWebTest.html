@@ -149,6 +149,22 @@
         ctx.arc(x, y, 5, 0, 2 * Math.PI);
         ctx.fillStyle = "red";
         ctx.fill();
+
+        // 좌표 그리기
+        drawCoordinates(ctx, landmark, x, y);
+      }
+
+      function drawCoordinates(ctx, landmark, x, y) {
+        // z 축 값을 확인하고, 유효하면 표시합니다. 유효하지 않으면 표시하지 않습니다.
+        const zValue = landmark.z ? `z: ${landmark.z.toFixed(2)}` : "";
+
+        ctx.fillStyle = "black";
+        ctx.font = "12px Arial";
+        ctx.fillText(`x: ${landmark.x.toFixed(2)}`, x + 10, y);
+        ctx.fillText(`y: ${landmark.y.toFixed(2)}`, x + 10, y + 15);
+        if (zValue) {
+          ctx.fillText(zValue, x + 10, y + 30);
+        }
       }
 
       // 웹캠에서 포즈 감지
