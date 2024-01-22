@@ -2,7 +2,6 @@
 <html>
 <head>
     <title>로그인 페이지</title>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <style>
         body {
             margin: 0;
@@ -149,7 +148,7 @@
                 <img src="./user.svg" alt="User Icon" />
             </div>
             <div>
-                <input type="email" placeholder="닉네임" id="email" value="" class="input-style">
+                <input type="text" placeholder="아이디" id="username" value="" class="input-style">
             </div>
         </div>
 
@@ -159,7 +158,7 @@
                 <img src="./lock.svg" alt="Lock Icon" />
             </div>
             <div>
-                <input type="password" placeholder="비밀번호" id="pw" value="" class="input-style">
+                <input type="password" placeholder="비밀번호" id="password" value="" class="input-style">
             </div>
         </div>
 
@@ -174,25 +173,31 @@
         </div>
     </div>
 </body>
-<script>
-    function onLoggin(){
-        
-        const email = document.getElementById("email");
-        const password = document.getElementById('pw')
-        axios({
-            method:"POST",
-            url: 'https://reqres.in/api/login',
-            data:{
-                "email": email.value,
-                "password": password.value
-            }
-        }).then((res)=>{
-            console.log(res);
-        }).catch(error=>{
-            console.log(error);
-            throw new Error(error);
-        });
-    }
+<script src="https://unpkg.com/axios/dist/axios.min.js" defer></script>
+    <script>
+        function onLoggin()
+        {
 
-</script>
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            const data = {
+                username: username,
+                password: password
+            };
+            axios({
+                method:"POST",
+                url: 'http://3.34.146.225:3000/users/login',
+                data:{
+                    "username": username.value,
+                    "password": password.value
+                }
+            }).then((res)=>{
+                console.log(res);
+            }).catch(error=>{
+                console.log(error);
+                throw new Error(error);
+            });
+        }
+    </script>
 </html>
