@@ -45,47 +45,70 @@ router.post("/register", async function (req, res) {
   }
 });
 
-// GET origin coordinates for a user
 router.get("/origin/:userId", function (req, res) {
   const userId = req.params.userId;
 
-  // 데이터베이스에서 사용자의 원점 좌표 조회
-  const query = "SELECT originX, originY, originZ FROM Users WHERE id = ?";
+  // 데이터베이스에서 사용자의 특정 신체 부위 좌표 조회
+  const query = "SELECT nose, leftEar, rightEar, leftShoulder, rightShoulder FROM Users WHERE id = ?";
   database.query(query, [userId], (error, results, fields) => {
     if (error) {
-      // 데이터베이스 오류 처리
-      res.status(500).send("Error in fetching user's origin");
+      res.status(500).send("Error in fetching user's body part coordinates");
     } else if (results.length === 0) {
-      // 사용자가 없는 경우
       res.status(404).send("User not found");
     } else {
-      // 조회된 원점 좌표 반환
-      res.status(200).json(results[0]);
+      // null 체크 및 좌표 변환
+      const parseCoordinates = (coordinates) => {
+        return coordinates ? coordinates.split(',').map(Number) : null;
+      };
+
+      const userCoordinates = {
+        nose: parseCoordinates(results[0].nose),
+        leftEar: parseCoordinates(results[0].leftEar),
+        rightEar: parseCoordinates(results[0].rightEar),
+        leftShoulder: parseCoordinates(results[0].leftShoulder),
+        rightShoulder: parseCoordinates(results[0].rightShoulder)
+      };
+
+      res.status(200).json(userCoordinates);
     }
   });
 });
+
 
 // POST to update a user's origin
 router.post("/origin", function (req, res) {
-  const { userId, originX, originY, originZ } = req.body;
+  const { userId, nose, leftEar, rightEar, leftShoulder, rightShoulder } = req.body;
 
   // 데이터베이스에서 사용자의 원점 좌표 업데이트
-  const query = "UPDATE Users SET originX = ?, originY = ?, originZ = ? WHERE id = ?";
-  database.query(query, [originX, originY, originZ, userId], (error, results, fields) => {
-    if (error) {
-      // 데이터베이스 오류 처리
-      res.status(500).send("Error updating user's origin");
-    } else {
-      if (results.affectedRows === 0) {
-        // 사용자가 없는 경우
-        res.status(404).send("User not found");
+  const query = `
+    UPDATE Users 
+    SET 
+      nose = ?,
+      leftEar = ?,
+      rightEar = ?,
+      leftShoulder = ?,
+      rightShoulder = ?
+    WHERE id = ?`;
+  database.query(
+    query,
+    [nose, leftEar, rightEar, leftShoulder, rightShoulder, userId],
+    (error, results, fields) => {
+      if (error) {
+        // 데이터베이스 오류 처리
+        res.status(500).send("Error updating user's origin");
       } else {
-        // 업데이트 성공
-        res.status(200).send("User's origin updated successfully");
+        if (results.affectedRows === 0) {
+          // 사용자가 없는 경우
+          res.status(404).send("User not found");
+        } else {
+          // 업데이트 성공
+          res.status(200).send("User's origin updated successfully");
+        }
       }
     }
-  });
+  );
 });
+
 
 // 로그인 API
 router.post("/login", function (req, res) {
