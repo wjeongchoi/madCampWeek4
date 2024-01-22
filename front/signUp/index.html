@@ -102,37 +102,45 @@
 
     <script>
         function register() {
-            // 각 입력 필드의 값을 가져옴
-            var userId = document.getElementById('user-id').value;
-            var nickname = document.getElementById('nickname').value;
-            var password = document.getElementById('password').value;
-            var confirmPassword = document.getElementById('confirm-password').value;
+    // 각 입력 필드의 값을 가져옴
+    var userId = document.getElementById('user-id').value;
+    var nickname = document.getElementById('nickname').value;
+    var password = document.getElementById('password').value;
+    var confirmPassword = document.getElementById('confirm-password').value;
 
-            // 콘솔에 출력 (실제로는 여기에 회원가입 로직을 구현)
-            console.log('User ID:', userId);
-            console.log('Nickname:', nickname);
-            console.log('Password:', password);
-            console.log('Confirm Password:', confirmPassword);
-            if(password === confirmPassword) {
-                // axios 요청
-                axios({
-                    method: 'POST',
-                    url: 'https://reqres.in/api/register',
-                    data: {
-                        "email": userId,
-                        "password": password
-                    }
-                }).then((res) => {
-                    console.log(res);
-                }).catch((error) => {
-                    console.log(error);
-                    throw new Error(error);
-                });
-            } else {
-                // 토스트 메시지 표시
-                showToast("비밀번호가 일치하지 않습니다");
+    // 콘솔에 출력 (실제로는 여기에 회원가입 로직을 구현)
+    console.log('User ID:', userId);
+    console.log('Nickname:', nickname);
+    console.log('Password:', password);
+    console.log('Confirm Password:', confirmPassword);
+    if(password === confirmPassword) {
+        // fetch 요청
+        fetch('http://3.34.146.225:3000/users/register', { // Replace 'https://your-domain.com' with your actual domain
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                id: userId,
+                username: nickname,
+                password: password
+            })
+        }).then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
             }
-        }
+            return response.json();
+        }).then(data => {
+            console.log(data);
+        }).catch((error) => {
+            console.error('There has been a problem with your fetch operation:', error);
+        });
+    } else {
+        // 토스트 메시지 표시
+        showToast("비밀번호가 일치하지 않습니다");
+    }
+}
+
     
         function showToast(message) {
             // 토스트 메시지를 생성하고 표시
