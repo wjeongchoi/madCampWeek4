@@ -27,8 +27,8 @@ router.get("/today", function (req, res) {
   const { date, user_id } = req.query;
 
   // 시간대별 사용 시간을 계산하는 쿼리
-  const query = `
-  SELECT hour, SUM(usage_time) as usage_time
+const query = `
+  SELECT hour, COALESCE(SUM(usage_time), 0) as usage_time
   FROM (
     SELECT 
       h.hour,
@@ -39,25 +39,27 @@ router.get("/today", function (req, res) {
       UNION SELECT 10 UNION SELECT 11 UNION SELECT 12 UNION SELECT 13 UNION SELECT 14
       UNION SELECT 15 UNION SELECT 16 UNION SELECT 17 UNION SELECT 18 UNION SELECT 19
       UNION SELECT 20 UNION SELECT 21 UNION SELECT 22 UNION SELECT 23
-    ) h
+    ) as h
     JOIN ProgramUsage pu ON pu.user_id = ? AND DATE(pu.start_time) = ? AND DATE(pu.end_time) = ?
     WHERE pu.start_time < CONCAT(?, ' ', LPAD(h.hour + 1, 2, '0'), ':00:00')
       AND pu.end_time > CONCAT(?, ' ', LPAD(h.hour, 2, '0'), ':00:00')
-  ) as \`usage\`
+  ) as usage_data
   GROUP BY hour`;
 
-
-  database.query(query, [date, date, user_id, date, date, date, date], (error, results, fields) => {
+database.query(query, [date, date, user_id, date, date, date, date], (error, results, fields) => {
     if (error) {
       res.status(500).send("Error in fetching program usage data: " + error.message);
     } else {
-      if (results.length === 0) {
-        res.status(404).send('No usage data found for this user on the specified date');
-      } else {
-        res.status(200).json(results);
-      }
+      let hourlyUsage = Array.from({ length: 24 }, (_, hour) => ({ hour, usage_time: 0 }));
+      
+      results.forEach(result => {
+        hourlyUsage[result.hour].usage_time = result.usage_time;
+      });
+
+      res.status(200).json(hourlyUsage);
     }
   });
 });
+
 
 module.exports = router;
