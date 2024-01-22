@@ -22,4 +22,33 @@ router.post("/time", function (req, res) {
     }
   );
 });
+
+// 지정된 날짜의 사용자별 시간대별 사용 시간 조회
+router.get("/today", function (req, res) {
+  const { date, user_id } = req.query;
+
+  // 모든 시간대에 대한 기본 데이터 생성
+  let hourlyUsage = Array.from({ length: 24 }, (_, hour) => ({ hour, usage_time: 0 }));
+
+  const query = `
+    SELECT 
+      HOUR(start_time) AS hour,
+      SUM(TIMESTAMPDIFF(MINUTE, start_time, end_time)) AS usage_time
+    FROM ProgramUsage
+    WHERE user_id = ? AND DATE(start_time) = ? AND DATE(end_time) = ?
+    GROUP BY HOUR(start_time)`;
+
+  database.query(query, [user_id, date, date], (error, results, fields) => {
+    if (error) {
+      res.status(500).send("Error in fetching program usage data: " + error.message);
+    } else {
+      // 데이터베이스 결과를 기본 데이터에 매핑
+      results.forEach(result => {
+        hourlyUsage[result.hour].usage_time = result.usage_time;
+      });
+
+      res.status(200).json(hourlyUsage);
+    }
+  });
+});
 module.exports = router;
