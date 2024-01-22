@@ -23,32 +23,41 @@ router.post("/time", function (req, res) {
   );
 });
 
-// 지정된 날짜의 사용자별 시간대별 사용 시간 조회
 router.get("/today", function (req, res) {
   const { date, user_id } = req.query;
 
-  // 모든 시간대에 대한 기본 데이터 생성
-  let hourlyUsage = Array.from({ length: 24 }, (_, hour) => ({ hour, usage_time: 0 }));
-
+  // 시간대별 사용 시간을 계산하는 쿼리
   const query = `
+  SELECT hour, SUM(usage_time) as usage_time
+  FROM (
     SELECT 
-      HOUR(start_time) AS hour,
-      SUM(TIMESTAMPDIFF(MINUTE, start_time, end_time)) AS usage_time
-    FROM ProgramUsage
-    WHERE user_id = ? AND DATE(start_time) = ? AND DATE(end_time) = ?
-    GROUP BY HOUR(start_time)`;
+      h.hour,
+      LEAST(TIMESTAMPDIFF(MINUTE, GREATEST(start_time, CONCAT(?, ' ', LPAD(h.hour, 2, '0'), ':00:00')), LEAST(end_time, CONCAT(?, ' ', LPAD(h.hour + 1, 2, '0'), ':00:00'))), 60) as usage_time
+    FROM (
+      SELECT 0 as hour UNION SELECT 1 UNION SELECT 2 UNION SELECT 3 UNION SELECT 4
+      UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 UNION SELECT 9
+      UNION SELECT 10 UNION SELECT 11 UNION SELECT 12 UNION SELECT 13 UNION SELECT 14
+      UNION SELECT 15 UNION SELECT 16 UNION SELECT 17 UNION SELECT 18 UNION SELECT 19
+      UNION SELECT 20 UNION SELECT 21 UNION SELECT 22 UNION SELECT 23
+    ) h
+    JOIN ProgramUsage pu ON pu.user_id = ? AND DATE(pu.start_time) = ? AND DATE(pu.end_time) = ?
+    WHERE pu.start_time < CONCAT(?, ' ', LPAD(h.hour + 1, 2, '0'), ':00:00')
+      AND pu.end_time > CONCAT(?, ' ', LPAD(h.hour, 2, '0'), ':00:00')
+  ) as \`usage\`
+  GROUP BY hour`;
 
-  database.query(query, [user_id, date, date], (error, results, fields) => {
+
+  database.query(query, [date, date, user_id, date, date, date, date], (error, results, fields) => {
     if (error) {
       res.status(500).send("Error in fetching program usage data: " + error.message);
     } else {
-      // 데이터베이스 결과를 기본 데이터에 매핑
-      results.forEach(result => {
-        hourlyUsage[result.hour].usage_time = result.usage_time;
-      });
-
-      res.status(200).json(hourlyUsage);
+      if (results.length === 0) {
+        res.status(404).send('No usage data found for this user on the specified date');
+      } else {
+        res.status(200).json(results);
+      }
     }
   });
 });
+
 module.exports = router;
