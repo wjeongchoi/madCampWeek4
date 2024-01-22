@@ -148,7 +148,7 @@
                 <img src="./user.svg" alt="User Icon" />
             </div>
             <div>
-                <input type="text" placeholder="아이디" id="username" value="" class="input-style">
+                <input type="text" placeholder="아이디" id="id" value="" class="input-style">
             </div>
         </div>
 
@@ -164,7 +164,7 @@
 
         <!-- 로그인 버튼 -->
         <div>
-            <input type="button" onclick='onLoggin()' value="로그인" class="input-field login-button">
+            <input type="button" onclick='onLogin()' value="로그인" class="input-field login-button">
         </div>
 
         <!-- 회원가입 링크 -->
@@ -173,31 +173,35 @@
         </div>
     </div>
 </body>
-<script src="https://unpkg.com/axios/dist/axios.min.js" defer></script>
-    <script>
-        function onLoggin()
-        {
+<script>
+    function onLogin() {
+        const id = document.getElementById('id').value;
+        const password = document.getElementById('password').value;
 
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
+        // id와 password를 data 객체에 넣어 POST 요청을 보냅니다.
+        const data = {
+            id: id,
+            password: password
+        };
 
-            const data = {
-                username: username,
-                password: password
-            };
-            axios({
-                method:"POST",
-                url: 'http://3.34.146.225:3000/users/login',
-                data:{
-                    "username": username.value,
-                    "password": password.value
-                }
-            }).then((res)=>{
-                console.log(res);
-            }).catch(error=>{
-                console.log(error);
-                throw new Error(error);
-            });
-        }
-    </script>
+        fetch('http://3.34.146.225:3000/users/login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => {
+            // 요청이 성공하면 결과를 처리합니다.
+            console.log(response);
+
+            // 여기에서 로그인 성공 후의 동작을 추가할 수 있습니다.
+        })
+        .catch(error => {
+            console.error(error);
+            // 요청 실패 시 처리
+        });
+    }
+</script>
+
 </html>
