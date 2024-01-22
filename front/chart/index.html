@@ -1,83 +1,79 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <title>Chart.js Charts</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        body {
-            display: flex;
-            width: 100%;
-            height: 100vh; /* 높이를 화면 전체로 조정 */
-            margin: 0; /* 기본 마진 제거 */
-            padding: 0; /* 패딩 조정 */
-            background: rgba(237, 244, 193, 0.52);
-            justify-content: center;
-            align-items: center;
+      body {
+        display: flex;
+        width: 100%;
+        height: 100vh; /* 높이를 화면 전체로 조정 */
+        margin: 0; /* 기본 마진 제거 */
+        padding: 0; /* 패딩 조정 */
+        background: rgba(237, 244, 193, 0.52);
+        justify-content: center;
+        align-items: center;
+      }
 
+      .chart-container {
+        position: relative;
+        background: white;
+        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.3) inset;
+        border-radius: 4px;
+        height: 80%;
+      }
+      #chartContainer1,
+      #chartContainer2 {
+        margin: 20px; /* 차트 사이의 간격 */
+      }
 
-        }
+      .chart-title {
+        position: absolute;
+        text-align: center;
+        color: #6e8977;
+        font-size: 30px;
+        font-family: "Escore Dream", sans-serif;
+        font-weight: 700;
+        text-transform: uppercase;
+        line-height: 20px;
+        word-wrap: break-word;
+        top: -40px; /* 텍스트 위치 조정 */
+      }
 
-        .chart-container {
-            position: relative;
-            background: white;
-            box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.30) inset;
-            border-radius: 4px;
-            height: 80%;
-        }
-        #chartContainer1, #chartContainer2 {
-            margin: 20px; /* 차트 사이의 간격 */
-        }
+      #title1 {
+        left: 29px;
+        width: 737px;
+      }
 
-        .chart-title {
-            position: absolute;
-            text-align: center;
-            color: #6E8977;
-            font-size: 30px;
-            font-family: 'Escore Dream', sans-serif;
-            font-weight: 700;
-            text-transform: uppercase;
-            line-height: 20px;
-            word-wrap: break-word;
-            top: -40px; /* 텍스트 위치 조정 */
-        }
+      #title2 {
+        left: 0px;
+        width: 404px;
+      }
 
-        #title1 {
-            left: 29px;
-            width: 737px;
-        }
-
-        #title2 {
-            left: 0px;
-            width: 404px;
-        }
-
-        .canvas {
-            width: 100%;
-            height: 100%;
-        }
-        @font-face {
-            font-family: 'Escore Dream';
-            src: url('../../SCDream6.otf') format('truetype');
-            font-weight: normal;
-            font-style: normal;
-        }
+      .canvas {
+        width: 100%;
+        height: 100%;
+      }
+      @font-face {
+        font-family: "Escore Dream";
+        src: url("../../SCDream6.otf") format("truetype");
+        font-weight: normal;
+        font-style: normal;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="chart-container" id="chartContainer1">
-        <div class="chart-title" id="title1">노트북 사용 시간</div>
-        <canvas id="myChart1" width="737" height="566"></canvas>
+      <div class="chart-title" id="title1">노트북 사용 시간</div>
+      <canvas id="myChart1" width="737" height="566"></canvas>
     </div>
     <div class="chart-container" id="chartContainer2">
-        <div class="chart-title" id="title2">나의 나쁜 자세</div>
-        <canvas id="myChart2" width="404" height="566"></canvas>
+      <div class="chart-title" id="title2">나의 나쁜 자세</div>
+      <canvas id="myChart2" width="404" height="566"></canvas>
     </div>
 
     <script>
-        // Utils 객체 및 chart1 데이터 설정
-        // chart1의 JavaScript 코드를 여기에 삽입
-        //데이터 파싱
-        
+        // Utils for chart 1
         const Utils = {
             CHART_COLORS: {
                 red: 'rgb(97, 139, 67)',
@@ -89,86 +85,60 @@
                 return months.slice(0, count);
             },
             labtop: (dataGet) => {
-                    const numbers = [];
-                    dataGet.forEach(item => {
-                        numbers.push(item.usage_time);
-                    });
-                    return numbers;
-                },
-            pose: (dataGet) => {
-                    const numbers = [];
-                    dataGet.forEach(item => {
-                        numbers.push(item.warning_count);
-                    });
-                    return numbers;
-                }
+                const numbers = [];
+                dataGet.forEach(item => {
+                    numbers.push(item.usage_time);
+                });
+                return numbers;
+            }
         };
-        // 데이터 설정
-        //mock data
-        const dataGet = [{"hour": 0, "usage_time": 30}, {"hour": 1, "usage_time": 0},  {"hour": 2, "usage_time": 30},  {"hour": 3, "usage_time": 30},  {"hour": 4, "usage_time": 30},  {"hour": 5, "usage_time": 30},  {"hour": 6, "usage_time": 30},  {"hour": 7, "usage_time": 30},  {"hour": 8, "usage_time": 30},  {"hour": 9, "usage_time": 30},  {"hour": 10, "usage_time": 30},  {"hour": 11, "usage_time": 30},  {"hour": 12, "usage_time": 30},  {"hour": 13, "usage_time": 30},  {"hour": 14, "usage_time": 30},  {"hour": 15, "usage_time": 30},  {"hour": 16, "usage_time": 30},  {"hour": 17, "usage_time": 30},  {"hour": 18, "usage_time": 30},  {"hour": 19, "usage_time": 30},  {"hour": 20, "usage_time": 30},  {"hour": 21, "usage_time": 30},  {"hour": 22, "usage_time": 30} ,{"hour": 23, "usage_time": 45}];
-        const dataGet2 = [{"hour": 0, "warning_count": 30}, {"hour": 1, "warning_count": 0}, {"hour": 2, "warning_count": 20}, {"hour": 3, "warning_count": 30}, {"hour": 4, "warning_count": 0}, {"hour": 5, "warning_count": 0}, {"hour": 6, "warning_count": 10}, {"hour": 7, "warning_count": 30}, {"hour": 8, "warning_count": 20}, {"hour": 9, "warning_count": 30}, {"hour": 10, "warning_count": 0}, {"hour": 11, "warning_count": 10}, {"hour": 12, "warning_count": 10}, {"hour": 13, "warning_count": 20}, {"hour": 14, "warning_count": 0}, {"hour": 15, "warning_count": 0}, {"hour": 16, "warning_count": 0}, {"hour": 17, "warning_count": 0}, {"hour": 18, "warning_count": 0}, {"hour": 19, "warning_count": 0}, {"hour": 20, "warning_count": 0}, {"hour": 21, "warning_count": 0}, {"hour": 22, "warning_count": 0} ,{"hour": 23, "warning_count": 45}]
-        const numbers = Utils.labtop(dataGet);
-        const DATA_COUNT = 24;
-        const NUMBER_CFG = {count: DATA_COUNT, min: 0, max: 60};
-        const labels = Utils.months({count: 24});
-        const data = {
-            labels: labels,
-            datasets: [
-                {
-                    label: 'Dataset 1',
-                    data: Utils.labtop(dataGet),
-                    backgroundColor: Utils.CHART_COLORS.red,
-                },
-                {
-                    label: 'Dataset 2',
-                    data: Utils.pose(dataGet2),
-                    backgroundColor: Utils.CHART_COLORS.blue,
-                },
-            ]
-        };
-        // 차트 설정
+    
+        // Fetch usage data from the API for chart 1
+        function fetchUsageData() {
+            const date = '2024-01-22';
+            const userId = 'test';
+    
+            fetch(`http://3.34.146.225:3000/usage/today?date=${date}&user_id=${userId}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok ' + response.statusText);
+                    }
+                    return response.json();
+                })
+                .then(dataGet => {
+                    updateChart1WithData(dataGet);
+                })
+                .catch(error => {
+                    console.error('There has been a problem with your fetch operation:', error);
+                });
+        }
+    
+        function updateChart1WithData(dataGet) {
+            myChart1.data.labels = Utils.months({ count: 24 });
+            myChart1.data.datasets[0].data = Utils.labtop(dataGet);
+            myChart1.update();
+        }
+    
+        // Chart 1 configuration
         const config1 = {
             type: 'bar',
-            data: data,
+            data: {
+                labels: Utils.months({count: 24}),
+                datasets: [{
+                    label: '사용 시간',
+                    backgroundColor: Utils.CHART_COLORS.red,
+                    data: [] // initial empty data
+                }]
+            },
             options: {
-                plugins: {
-                    title: {
-                        display: true,
-                        text: 'Chart.js Bar Chart - Stacked'
-                    },
-                },
-                responsive: true,
                 scales: {
-                    x: {
-                        stacked: true,
-                    },
-                    y: {
-                        stacked: true
-                    }
+                    x: { stacked: true },
+                    y: { stacked: true }
                 }
             }
         };
-        // 액션 설정
-        const actions = [
-            {
-                name: 'Randomize',
-                handler(chart) {
-                    chart.data.datasets.forEach(dataset => {
-                        dataset.data = Utils.numbers({count: chart.data.labels.length, min: 0, max: 30});
-                    });
-                    chart.update();
-                }
-            },
-        ];
-
-        // 차트 생성
-        const myChart1 = new Chart(
-            document.getElementById('myChart1'),
-            config1 // chart1의 설정 객체 이름을 config1로 변경
-        );
-
-        // Utils 객체 및 chart2 데이터 설정
-        // chart2의 JavaScript 코드를 여기에 삽입
+    
+        // Utils for chart 2
         const Utils2 = {
             CHART_COLORS: {
                 red: 'rgb(233, 241, 181)',
@@ -183,120 +153,68 @@
                 return { counts, labels };
             }
         };
-        //mock data
-        const warningData = [
-        {"warning_type": 1, "warning_count": 3}, 
-        {"warning_type": 2, "warning_count": 2},
-        {"warning_type": 3, "warning_count": 6}
-        ];
-        
-        // 데이터 설정
-        const processedData = Utils2.processData(warningData);
-        const DATA_COUNT2 = 3;
-        const NUMBER_CFG2 = {count: DATA_COUNT2, min: 0, max: 100};
-        
-        const data2 = {
-            labels: ['자세 1', '자세 2', '자세 3'],
-            datasets: [
-                {
-                    label: 'Dataset 1',
-                    data: processedData.counts,
-                    backgroundColor: Object.values(Utils2.CHART_COLORS),
-                }
-            ]
-        };
-        
-        // 차트 설정
+    
+        // Fetch warning data from the API for chart 2
+        function fetchWarningData() {
+            const date = '2024-01-23';
+            const userId = 'test';
+    
+            fetch(`http://3.34.146.225:3000/warning/today?date=${date}&user_id=${userId}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok ' + response.statusText);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    updateChart2WithData(data);
+                })
+                .catch(error => {
+                    console.error('There has been a problem with your fetch operation:', error);
+                });
+        }
+    
+        function updateChart2WithData(warningData) {
+            const processedData = Utils2.processData(warningData);
+            myChart2.data.labels = processedData.labels;
+            myChart2.data.datasets[0].data = processedData.counts;
+            myChart2.update();
+        }
+    
+        // Chart 2 configuration
         const config2 = {
             type: 'pie',
-            data: data2,
+            data: {
+                labels: [],
+                datasets: [{
+                    label: '나쁜 자세',
+                    backgroundColor: Object.values(Utils2.CHART_COLORS),
+                    data: [] // initial empty data
+                }]
+            },
             options: {
-                responsive: true,
                 plugins: {
                     legend: {
                         position: 'top',
                     },
                     title: {
                         display: true,
-                        text: 'Chart.js Pie Chart'
+                        text: '나의 나쁜 자세'
                     }
-                }
-            },
-        };
-        
-        // 액션 설정
-        const actions2 = [
-            {
-                name: 'Randomize',
-                handler(chart) {
-                    chart.data.datasets.forEach(dataset => {
-                        dataset.data = Utils2.numbers({count: chart.data.labels.length, min: 0, max: 100});
-                    });
-                    chart.update();
-                }
-            },
-            {
-                name: 'Add Dataset',
-                handler(chart) {
-                    const data = chart.data;
-                    const newDataset2 = {
-                        label: 'Dataset ' + (data.datasets.length + 1),
-                        backgroundColor: [],
-                        data: [],
-                    };
-        
-                    for (let i = 0; i < data.labels.length; i++) {
-                        newDataset2.data.push(Utils2.numbers({count: 1, min: 0, max: 100}));
-                        const colorIndex = i % Object.keys(Utils2.CHART_COLORS).length;
-                        newDataset2.backgroundColor.push(Object.values(Utils2.CHART_COLORS)[colorIndex]);
-                    }
-        
-                    chart.data.datasets.push(newDataset2);
-                    chart.update();
-                }
-            },
-            {
-                name: 'Add Data',
-                handler(chart) {
-                    const data = chart.data;
-                    if (data.datasets.length > 0) {
-                        data.labels.push('data #' + (data.labels.length + 1));
-        
-                        for (let index = 0; index < data.datasets.length; ++index) {
-                            data.datasets[index].data.push(Utils2.rand(0, 100));
-                        }
-        
-                        chart.update();
-                    }
-                }
-            },
-            {
-                name: 'Remove Dataset',
-                handler(chart) {
-                    chart.data.datasets.pop();
-                    chart.update();
-                }
-            },
-            {
-                name: 'Remove Data',
-                handler(chart) {
-                    chart.data.labels.splice(-1, 1); // remove the label first
-        
-                    chart.data.datasets.forEach(dataset => {
-                        dataset.data.pop();
-                    });
-        
-                    chart.update();
                 }
             }
-        ];
-        
-
-        // 차트 생성
-        const myChart2 = new Chart(
-            document.getElementById('myChart2'),
-            config2 // chart2의 설정 객체 이름을 config2로 변경
-        );
+        };
+    
+        // Call the fetch functions when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchUsageData();
+            fetchWarningData();
+        });
+    
+        // Create the charts
+        const myChart1 = new Chart(document.getElementById('myChart1'), config1);
+        const myChart2 = new Chart(document.getElementById('myChart2'), config2);
     </script>
-</body>
+    
+  </body>
 </html>
