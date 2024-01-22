@@ -237,22 +237,20 @@
         </div>
         </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
         </div>
     </div>
     <script>
+        // Function to get the state of the toggle buttons
+        function getToggleState(toggleId) {
+            return document.getElementById(toggleId).classList.contains('active') ? true : false;
+        }
+    
+        // Function to get the selected value of the dropdown
+        function getDropdownValue() {
+            return document.querySelector('.dropdown').value;
+        }
+    
+        // Event listeners for toggle buttons
         document.getElementById('toggleButton1').addEventListener('click', function() {
             this.classList.toggle('active');
         });
@@ -265,16 +263,41 @@
         document.getElementById('toggleButton4').addEventListener('click', function() {
             this.classList.toggle('active');
         });
-        function toggleDropdown() {
-            var dropdown = document.querySelector('.dropdown');
-            if (dropdown.style.display === 'none' || dropdown.style.display === '') {
-                dropdown.style.display = 'block';
-            } else {
-                dropdown.style.display = 'none';
-            }
-        }
+    
+        // Event listener for the confirm button
+        document.querySelector('.button-confirm').addEventListener('click', function() {
+            // Collect the state of the settings
+            const screen = getToggleState('toggleButton1') ? 1 : 0;
+            const turtle = getToggleState('toggleButton2');
+            const close = getToggleState('toggleButton3');
+            const tilted = getToggleState('toggleButton4');
+            const alert = parseInt(getDropdownValue().replace('option', ''), 10);
+    
+            // Define user_id (this should be dynamically set based on the logged-in user)
+            const user_id = 'test'; // Replace with actual user ID
+    
+            // Send the data to the server
+            fetch('http://3.34.146.225:3000/setting', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ user_id, turtle, close, tilted, screen, alert })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.text();
+            })
+            .then(result => {
+                console.log('Settings updated successfully!'); // Notify the user of success
+            })
+            .catch(error => {
+                console.log('Error updating settings: ' + error); // Notify the user of an error
+            });
+        });
     </script>
-
-
+    
 </body>
 </html>
