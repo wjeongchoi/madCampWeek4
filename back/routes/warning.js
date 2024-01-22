@@ -40,5 +40,24 @@ router.post('/:type', function(req, res) {
     });
   });
   
+  router.get('/time', function(req, res) {
+    const date = req.query.date;
+    const user_id = req.query.user_id;
+  
+    const query = 'SELECT HOUR(warning_time) AS warning_hour, COUNT(*) AS warning_count FROM Warnings WHERE DATE(warning_time) = ? AND user_id = ? GROUP BY HOUR(warning_time)';
+  
+    database.query(query, [date, user_id], (error, results, fields) => {
+      if (error) {
+        res.status(500).send('Error in fetching warning statistics: ' + error.message);
+      } else {
+        if (results.length === 0) {
+          res.status(404).send('No warnings found for this user on the specified date');
+        } else {
+          res.status(200).json(results);
+        }
+      }
+    });
+  });
+  
   module.exports = router;
   
