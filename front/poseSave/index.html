@@ -50,6 +50,10 @@
             cursor: pointer;
         }
 
+        .input-field.login-button:hover {
+          background-color: #EEEEEE; /* 버튼 색상을 회색으로 변경 */
+        }
+
         .inner-content {
             width: 1280px;
             height: 720px;
@@ -71,11 +75,17 @@
         z-index: 2;
         background: transparent;
         }
+        @font-face {
+          font-family: 'Escore Dream';
+          src: url('../../SCDream6.otf') format('truetype');
+          font-weight: normal;
+          font-style: normal;
+      }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="button">바른 자세 저장</div>
+        <div class="button" style="font-family: 'Escore Dream', sans-serif;">바른 자세 저장</div>
     </div>
     <video id="video" width="640" height="480" autoplay muted></video>
     <canvas id="canvas" width="640" height="480"></canvas>
