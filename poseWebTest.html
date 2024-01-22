@@ -46,6 +46,49 @@
     <video id="video" width="640" height="480" autoplay muted></video>
     <canvas id="canvas" width="640" height="480"></canvas>
 
+    <table
+      id="landmarkCoordinates"
+      border="1"
+      style="position: absolute; left: 1100px; top: 300px"
+    >
+      <tr>
+        <th>Landmark</th>
+        <th>X</th>
+        <th>Y</th>
+        <th>Z</th>
+      </tr>
+      <tr>
+        <td>0 (Nose)</td>
+        <td id="lm0x">-</td>
+        <td id="lm0y">-</td>
+        <td id="lm0z">-</td>
+      </tr>
+      <tr>
+        <td>7 (Left Ear)</td>
+        <td id="lm7x">-</td>
+        <td id="lm7y">-</td>
+        <td id="lm7z">-</td>
+      </tr>
+      <tr>
+        <td>8 (Right Ear)</td>
+        <td id="lm8x">-</td>
+        <td id="lm8y">-</td>
+        <td id="lm8z">-</td>
+      </tr>
+      <tr>
+        <td>11 (Left Shoulder)</td>
+        <td id="lm11x">-</td>
+        <td id="lm11y">-</td>
+        <td id="lm11z">-</td>
+      </tr>
+      <tr>
+        <td>12 (Right Shoulder)</td>
+        <td id="lm12x">-</td>
+        <td id="lm12y">-</td>
+        <td id="lm12z">-</td>
+      </tr>
+    </table>
+
     <script>
       const videoElement = document.getElementById("video");
       const canvasElement = document.getElementById("canvas");
@@ -125,20 +168,46 @@
         canvasCtx.save();
         canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
 
-        // 랜드마크 그리기
+        // 랜드마크 그리기 및 좌표 표시
         if (results.poseLandmarks) {
-          for (const landmark of results.poseLandmarks) {
-            // 원하는 랜드마크 ID에 따라 이미지를 띄우기
-            if (landmark.x !== 0 && landmark.y !== 0) {
-              // 유효한 랜드마크 확인
-              placeImageAtLandmark(landmark, imageUrl);
-            }
+          for (let i = 0; i < results.poseLandmarks.length; i++) {
+            const landmark = results.poseLandmarks[i];
 
-            drawLandmark(canvasCtx, landmark);
+            // 원하는 랜드마크 ID만 그리기 및 좌표 업데이트
+            if ([0, 7, 8, 11, 12].includes(i)) {
+              if (landmark.x !== 0 && landmark.y !== 0) {
+                //placeImageAtLandmark(landmark, imageUrl);
+              }
+
+              drawLandmark(canvasCtx, landmark);
+              updateCoordinates(i, landmark); // 좌표 업데이트 함수 호출
+            }
           }
         }
 
         canvasCtx.restore();
+      }
+
+      // 좌표 업데이트 함수
+      function updateCoordinates(landmarkId, landmark) {
+        document.getElementById(`lm${landmarkId}x`).innerText =
+          landmark.x.toFixed(3);
+        document.getElementById(`lm${landmarkId}y`).innerText =
+          landmark.y.toFixed(3);
+        document.getElementById(`lm${landmarkId}z`).innerText =
+          landmark.z.toFixed(3);
+      }
+
+      function drawCoordinates(ctx, landmark, index, startX, startY) {
+        ctx.fillStyle = "black";
+        ctx.font = "16px Arial";
+        ctx.fillText(
+          `Landmark ${index}: x: ${landmark.x.toFixed(
+            3
+          )}, y: ${landmark.y.toFixed(3)}, z: ${landmark.z.toFixed(3)}`,
+          startX,
+          startY
+        );
       }
 
       function drawLandmark(ctx, landmark) {
@@ -149,6 +218,22 @@
         ctx.arc(x, y, 5, 0, 2 * Math.PI);
         ctx.fillStyle = "red";
         ctx.fill();
+
+        // 좌표 그리기
+        //drawCoordinates(ctx, landmark, x, y);
+      }
+
+      function drawCoordinates(ctx, landmark, x, y) {
+        // z 축 값을 확인하고, 유효하면 표시합니다. 유효하지 않으면 표시하지 않습니다.
+        const zValue = landmark.z ? `z: ${landmark.z.toFixed(2)}` : "";
+
+        ctx.fillStyle = "black";
+        ctx.font = "12px Arial";
+        ctx.fillText(`x: ${landmark.x.toFixed(2)}`, x + 10, y);
+        ctx.fillText(`y: ${landmark.y.toFixed(2)}`, x + 10, y + 15);
+        if (zValue) {
+          ctx.fillText(zValue, x + 10, y + 30);
+        }
       }
 
       // 웹캠에서 포즈 감지
