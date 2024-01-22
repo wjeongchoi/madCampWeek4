@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>등록 페이지</title>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <style>
         body {
             background-color: #F5F9DE;
@@ -33,7 +34,7 @@
             padding-left: 35px;
             box-sizing: border-box;
             position: relative; /* 입력 필드에 z-index를 적용하기 위해 relative 설정 */
-            z-index: 1;
+            z-index: 1000;
             color: #6E8977;
             line-height: 20px;
             word-wrap: break-word;
@@ -44,7 +45,7 @@
             height: 20px;
             position: absolute;
             left: 12px;
-            top: 35px;
+            top: 13px;
             z-index: 0;
         }
         .sign-up-button {
@@ -71,19 +72,19 @@
 <body>
     <div class="container">
         <!-- User ID -->
-        <img src="user.svg" alt="User Icon" class="icon" style="top: 10px;">
+        <img src="user.svg" alt="User Icon" class="icon" style="top: 22px; left: 18px;">
         <input type="text" placeholder="아이디" id="user-id" class="input-field">
 
         <!-- Nickname -->
-        <img src="user.svg" alt="User Icon" class="icon" style="top: 70px;">
+        <img src="user.svg" alt="User Icon" class="icon" style="top: 82px; left: 18px;">
         <input type="text" placeholder="닉네임" id="nickname" class="input-field">
 
         <!-- Password -->
-        <img src="lock.svg" alt="Lock Icon" class="icon" style="top: 130px;">
+        <img src="lock.svg" alt="Lock Icon" class="icon" style="top: 142px; left: 18px;">
         <input type="password" placeholder="비밀번호" id="password" class="input-field">
 
         <!-- Password Confirmation -->
-        <img src="lock.svg" alt="Lock Icon" class="icon" style="top: 190px;">
+        <img src="lock.svg" alt="Lock Icon" class="icon" style="top: 202px; left: 18px;">
         <input type="password" placeholder="비밀번호 확인" id="confirm-password" class="input-field">
 
         <!-- Sign Up Button -->
@@ -103,6 +104,47 @@
             console.log('Nickname:', nickname);
             console.log('Password:', password);
             console.log('Confirm Password:', confirmPassword);
+            if(password === confirmPassword) {
+                // axios 요청
+                axios({
+                    method: 'POST',
+                    url: 'https://reqres.in/api/register',
+                    data: {
+                        "email": userId,
+                        "password": password
+                    }
+                }).then((res) => {
+                    console.log(res);
+                }).catch((error) => {
+                    console.log(error);
+                    throw new Error(error);
+                });
+            } else {
+                // 토스트 메시지 표시
+                showToast("비밀번호가 일치하지 않습니다");
+            }
+        }
+    
+        function showToast(message) {
+            // 토스트 메시지를 생성하고 표시
+            var toast = document.createElement("div");
+            toast.innerText = message;
+            toast.style.position = "fixed";
+            toast.style.bottom = "20px";
+            toast.style.left = "50%";
+            toast.style.transform = "translateX(-50%)";
+            toast.style.backgroundColor = "red";
+            toast.style.color = "white";
+            toast.style.padding = "10px";
+            toast.style.borderRadius = "5px";
+            toast.style.zIndex = "1000";
+    
+            document.body.appendChild(toast);
+    
+            // 몇 초 후에 토스트 메시지 사라지게 하기
+            setTimeout(function() {
+                document.body.removeChild(toast);
+            }, 3000);
         }
     </script>
 </body>
