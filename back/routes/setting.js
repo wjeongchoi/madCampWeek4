@@ -42,4 +42,25 @@ router.get("/", function (req, res) {
     });
   });
 
+// 사용자 설정을 변경하는 API
+router.post("/", function (req, res) {
+    const { user_id, turtle, close, tilted, screen, alert } = req.body;
+  
+    // 사용자 설정을 업데이트하는 SQL 쿼리
+    const query = "UPDATE UserSettings SET turtle = ?, close = ?, tilted = ?, screen = ?, alert = ? WHERE user_id = ?";
+  
+    database.query(query, [turtle, close, tilted, screen, alert, user_id], (error, results, fields) => {
+      if (error) {
+        res.status(500).send("Error updating user settings: " + error.message);
+      } else {
+        if (results.affectedRows === 0) {
+          // 업데이트할 레코드가 없는 경우
+          res.status(404).send("User settings not found for the provided user_id");
+        } else {
+          res.status(200).send("User settings updated successfully");
+        }
+      }
+    });
+  });
+  
 module.exports = router;
