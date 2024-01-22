@@ -22,4 +22,24 @@ router.post("/reset", function (req, res) {
   });
 });
 
+// 사용자의 현재 설정을 조회하는 API
+router.get("/", function (req, res) {
+    const { user_id } = req.query;
+  
+    // 사용자 설정을 조회하는 SQL 쿼리
+    const query = "SELECT turtle, close, tilted, screen, alert FROM UserSettings WHERE user_id = ?";
+  
+    database.query(query, [user_id], (error, results, fields) => {
+      if (error) {
+        res.status(500).send("Error fetching user settings: " + error.message);
+      } else {
+        if (results.length > 0) {
+          res.status(200).json(results[0]);
+        } else {
+          res.status(404).send("User settings not found");
+        }
+      }
+    });
+  });
+
 module.exports = router;
