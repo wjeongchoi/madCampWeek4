@@ -1,0 +1,8 @@
+.vector {
+    width: 54rem;
+    height: 45.09375rem;
+    flex-shrink: 0;
+    fill: #D3E695;
+}
+
+/* 이 클래스는 HTML의 SVG 요소에 적용됩니다. */
