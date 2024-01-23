@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Chart.js Charts</title>
+    <title>나의 통계</title>
     <meta charset="UTF-8" />
     <script src="../common.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -15,23 +15,38 @@
         background: rgba(237, 244, 193, 0.52);
         justify-content: center;
         align-items: center;
+        
       }
 
       .chart-container {
         position: relative;
         background: white;
-        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.3) inset;
-        border-radius: 4px;
-        height: 80%;
+        box-shadow: 0px 3px 3px rgba(0, 0, 0, 0.2) inset;
+        border-radius: 10px;
+        height: 65%;
+        padding: 30px;
+        flex-direction: column;
+        justify-content: center; /* 수평 중앙 정렬 */
+        align-items: center; /* 수직 중앙 정렬 */
       }
-      #chartContainer1,
+      #chartContainer1 {
+        margin: 20px;
+        width: 50%;
+        padding: 20px;
+        justify-content: center; /* 수평 중앙 정렬 */
+        align-items: center; /* 수직 중앙 정렬 */
+      }
       #chartContainer2 {
-        margin: 20px; /* 차트 사이의 간격 */
+        margin: 30px; /* 차트 사이의 간격 */
+        width: 30%;
+        padding: 20px;
+        justify-content: center; /* 수평 중앙 정렬 */
+        align-items: center; /* 수직 중앙 정렬 */
       }
 
       .chart-title {
         position: absolute;
-        text-align: center;
+
         color: #6e8977;
         font-size: 30px;
         font-family: "Escore Dream", sans-serif;
@@ -43,7 +58,9 @@
       }
 
       #title1 {
-        left: 29px;
+        position: absolute;
+        left: 0; /* 왼쪽 끝으로 정렬 */
+        top: -40px;
         width: 737px;
       }
 
@@ -58,8 +75,10 @@
       }
       .custom-button {
         width: 53px;
-        height: 52px;
-        position: relative;
+        height: 53px;
+        position: absolute;
+        top: -67px;
+        right: 0;
         background: #6e8977;
         box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
         border-radius: 10px;
@@ -98,10 +117,13 @@
     <div class="chart-container" id="chartContainer2">
       <div class="chart-title" id="title2">나의 나쁜 자세</div>
       <canvas id="myChart2" width="404" height="566"></canvas>
+      <button class="custom-button" onclick="redirectToSettings()">
+        <img src="./setting.png" />
+      </button>
     </div>
-    <button class="custom-button" onclick="redirectToSettings()">
-      <img src="./setting.png" />
-    </button>
+    
+    
+    
     <script>
       // Utils for chart 1
       const Utils = {
@@ -262,7 +284,7 @@
           plugins: {
             title: {
               display: true,
-              text: "Chart.js Bar Chart - Stacked",
+              text: " ",
             },
           },
           responsive: true,
@@ -288,7 +310,18 @@
         },
         processData: (data) => {
           const counts = data.map((item) => item.warning_count);
-          const labels = data.map((item) => `자세 ${item.warning_type}`);
+          const labels = data.map((item) => {
+            switch (item.warning_type) {
+              case 1: // 예시로, warning_type이 1일 때 '거북목'
+                return "거북목";
+              case 2: // 예시로, warning_type이 2일 때 '화면 밀착'
+                return "화면 밀착";
+              case 3: // 예시로, warning_type이 3일 때 '틀어짐'
+                return "틀어짐";
+              default:
+                return `자세 ${item.warning_type}`; // 기타 경우
+            }
+          });
           return { counts, labels };
         },
       };
@@ -355,7 +388,7 @@
             },
             title: {
               display: true,
-              text: "나의 나쁜 자세",
+              text: " ",
             },
           },
         },

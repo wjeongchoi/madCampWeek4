@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Settings Page</title>
+    <title>크롬 익스텐션 환경설정</title>
     <meta charset="UTF-8">
     <script src="../common.js"></script>
     <style>
@@ -16,6 +16,7 @@
             background-image: url('background.png');
             background-size: cover;
             background-repeat: no-repeat;
+            overflow: hidden;
         }
         
         .settings-form {
@@ -78,6 +79,7 @@
             border-radius: 4px;
             cursor: pointer;
             transition: background-color 0.3s;
+            margin-top: 15px;
         }
 
         .button-confirm:hover {
@@ -226,11 +228,34 @@
         }
 
         .modal-content {
-            background-color: #fefefe;
+            background-color: #e9f1b5;
+            color: #54685B;
             margin: 15% auto;
             padding: 20px;
             border: 1px solid #888;
+            border-radius: 10px;
             width: 80%;
+            font-family: 'Escore Dream', sans-serif;
+        }
+        .modal-content button {
+            background-color: white; /* 배경색 흰색 */
+            border: 2px solid #54685B; /* 아웃라인 색 */
+            cursor: pointer;
+            transition: background-color 0.3s;
+            border-radius: 2px;
+            color: #54685B;
+            font-family: 'Escore Dream', sans-serif;
+        }
+        
+        .modal-content button:hover {
+            background-color: #EEEEEE; /* 호버 색상 변경 */
+        }
+        
+        /* 모달 내의 비밀번호 입력 칸 스타일 */
+        .modal-content input[type=password] {
+            height: 40px; /* 높이를 버튼과 동일하게 조정 */
+            /* 기타 스타일 (필요에 따라) */
+            border-radius: 2px;
         }
 
     </style>
@@ -244,62 +269,50 @@
             <div class="modal-content">
                 <span class="close">&times;</span>
                 <p>계정을 삭제하시려면 비밀번호를 입력하세요.</p>
-                <input type="password" id="passwordInput">
-                <button onclick="deleteUser()">확인</button>
+                <input type="password" id="passwordInput" style="height: 45px;">
+                <button onclick="deleteUser()" style="height: 45px;">확인</button>
             </div>
         </div>
         <!-- 모달 끝 -->
 
 
         <div style="width: 365px; height: 485px; left: 450px; top: 102px;">
+            <img src="chrome.png" alt="Chrome Icon" class="chrome-icon" style="width: 37px; height: 37px; left: 8px; top: 0px; position: absolute;"/>
+            <div class="text-style text-large" style="left: 49px; top: 9px; position: absolute;">환경설정</div>
+            <div class="text-style text-medium" style="left: 30px; top: 74px; position: absolute;">캐릭터 모드</div>
+            <div class="text-style text-medium" style="left: 30px; top: 135px; position: absolute;">경고 자세</div>
+            <div class="text-style text-small" style="left: 57px; top: 175px; position: absolute;">자세 1</div>
+            <div class="text-style text-small" style="left: 57px; top: 224px; position: absolute;">자세 2</div>
+            <div class="text-style text-small" style="left: 57px; top: 273px; position: absolute;">자세 3</div>
+            <div style="width: 365px; height: 270px; top: 51px; position: absolute; border-radius: 6px; border: 4px #6E8977 solid"></div>
+            <div style="width: 326px; height: 0px; left: 30px; top: 113px; position: absolute; border: 0.50px #6E8977 solid"></div>
+            <div style="width: 295px; height: 0px; left: 57px; top: 207px; position: absolute; border: 0.50px #6E8977 solid"></div>
+            <div style="width: 295px; height: 0px; left: 57px; top: 256px; position: absolute; border: 0.50px #6E8977 solid"></div>
             
-            <div class="text-style text-large" style="left: 40px; top: 9px; position: absolute;">환경설정</div>
-            <div class="text-style text-medium" style="left: 17px; top: 74px; position: absolute;">캐릭터 모드</div>
-            <div class="text-style text-medium" style="left: 18px; top: 135px; position: absolute;">경고 자세</div>
-            <div class="text-style text-small" style="left: 46px; top: 175px; position: absolute;">자세 1</div>
-            <div class="text-style text-small" style="left: 45px; top: 224px; position: absolute;">자세 2</div>
-            <div class="text-style text-small" style="left: 45px; top: 273px; position: absolute;">자세 3</div>
-            <div style="width: 365px; height: 370px; left: 0px; top: 51px; position: absolute; border-radius: 4px; border: 3px #6E8977 solid"></div>
-            <div style="width: 326px; height: 0px; left: 18px; top: 113px; position: absolute; border: 0.50px #6E8977 solid"></div>
-            <div style="width: 295px; height: 0px; left: 49px; top: 207px; position: absolute; border: 0.50px #6E8977 solid"></div>
-            <div style="width: 295px; height: 0px; left: 49px; top: 256px; position: absolute; border: 0.50px #6E8977 solid"></div>
-            <div style="width: 325px; height: 0px; left: 19px; top: 310px; position: absolute; border: 0.50px #6E8977 solid"></div>
 
             <!-- Toggle Switches -->
             <!-- First Toggle Switch -->
-            <div id="toggleButton1" class="toggle-button" style="left: 304px; top: 74px; position: absolute;">
+            <div id="toggleButton1" class="toggle-button" style="left: 317px; top: 74px; position: absolute;">
                 <div class="toggle-inner"></div>
             </div>
 
             <!-- Second Toggle Switch -->
-            <div id="toggleButton2" class="toggle-button" style="left: 304px; top: 175px; position: absolute;">
+            <div id="toggleButton2" class="toggle-button" style="left: 317px; top: 175px; position: absolute;">
                 <div class="toggle-inner"></div>
             </div>
 
             <!-- Third Toggle Switch -->
-            <div id="toggleButton3" class="toggle-button" style="left: 304px; top: 224px; position: absolute;">
+            <div id="toggleButton3" class="toggle-button" style="left: 317px; top: 224px; position: absolute;">
                 <div class="toggle-inner"></div>
             </div>
 
             <!-- Fourth Toggle Switch -->
-            <div id="toggleButton4" class="toggle-button" style="left: 304px; top: 273px; position: absolute;">
+            <div id="toggleButton4" class="toggle-button" style="left: 317px; top: 273px; position: absolute;">
                 <div class="toggle-inner"></div>
             </div>
-                    <!-- Additional elements -->
-        <div class="dropdown-container" style="top: 308px; position: absolute; outline: none;">
-            <div class="dropdown-header" style="outline: none;">
-                경고 방식
-                
-            </div>
-            <select class="dropdown" name="options" style="outline: none;">
-                <option value="option1">Option 1</option>
-                <option value="option2">Option 2</option>
-                <option value="option3">Option 3</option>
-            </select>
-        </div>
 
         <!--버튼 모음 form-->
-        <div style="width: 100%; height: 100%; position: relative; top: 430px;">
+        <div style="width: 100%; height: 100%; position: relative; top: 340px; left: 3px;">
             <!-- 자세 재설정 버튼 -->
             <button class="button-style" onclick="redirectToPoseSave()">
                 <div class="text-style text-medium" style="text-align: center; color: #6E8977;">자세 재설정</div>
@@ -311,12 +324,12 @@
             </button>
 
             <!-- 로그아웃 버튼 -->
-            <button class="transparent-button" style="left: 295px; top: 128px; position: absolute;" onclick="logout()">
+            <button class="transparent-button" style="left: 285px; top: 120px; position: absolute;" onclick="logout()">
                 <div class="text-style text-medium" style="white-space: nowrap;">로그아웃</div>
             </button>
 
             <!-- 탈퇴 버튼 -->
-            <button class="transparent-button" style="left: 328px; top: 158px; position: absolute;" onclick="promptForDeletion()">
+            <button class="transparent-button" style="left: 323px; top: 150px; position: absolute;" onclick="promptForDeletion()">
                 <div class="text-style text-medium" style="white-space: nowrap;">탈퇴</div>
             </button>
         </div>

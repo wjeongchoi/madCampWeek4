@@ -1,4 +1,4 @@
-function showToast(message, backgroundColor = "gray") {
+function showToast(message, backgroundColor = "#A4A4A4") {
     var toast = document.createElement("div");
     toast.innerText = message;
     toast.style.position = "fixed";
