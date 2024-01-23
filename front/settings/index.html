@@ -265,7 +265,7 @@
         <!--버튼 모음 form-->
         <div style="width: 100%; height: 100%; position: relative; top: 430px;">
             <!-- 자세 재설정 버튼 -->
-            <button class="button-style">
+            <button class="button-style" onclick="redirectToPoseSave()">
                 <div class="text-style text-medium" style="text-align: center; color: #6E8977;">자세 재설정</div>
             </button>
 
@@ -355,6 +355,10 @@
                 console.log('Error updating settings: ' + error); // Notify the user of an error
             });
         });
+
+        function redirectToPoseSave() {
+            window.location.href = '../poseSave/index.html';
+        }
     </script>
     
 </body>
