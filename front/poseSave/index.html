@@ -1,91 +1,92 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>포즈 저장</title>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils"></script>
     <script
-    src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js"
-    crossorigin="anonymous"
+      src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js"
+      crossorigin="anonymous"
     ></script>
     <script
-    src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"
-    crossorigin="anonymous"
+      src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"
+      crossorigin="anonymous"
     ></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/pose"></script>
     <style>
-        body {
-            background-color: #F5F9DE;
-            margin: 0;
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-image: url('background.png');
-            background-size: cover;
-            background-repeat: no-repeat;
-        }
-        .container {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            
-        }
+      body {
+        background-color: #f5f9de;
+        margin: 0;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-image: url("background.png");
+        background-size: cover;
+        background-repeat: no-repeat;
+      }
+      .container {
+        width: 100%;
+        height: 100%;
+        position: relative;
+      }
 
-        .button {
-            width: 223px;
-            height: 59px;
-            position: absolute;
-            left: 50%;
-            top: 10%;
-            transform: translate(-50%, 1200%);
-            background: white;
-            box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-            text-align: center;
-            line-height: 59px;
-            color: #5E7666;
-            font-size: 24px;
-            font-family: Inter;
-            font-weight: 700;
-            cursor: pointer;
-        }
+      .button {
+        width: 223px;
+        height: 59px;
+        position: absolute;
+        left: 50%;
+        top: 10%;
+        transform: translate(-50%, 1200%);
+        background: white;
+        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+        text-align: center;
+        line-height: 59px;
+        color: #5e7666;
+        font-size: 24px;
+        font-family: Inter;
+        font-weight: 700;
+        cursor: pointer;
+      }
 
-        .input-field.login-button:hover {
-          background-color: #EEEEEE; /* 버튼 색상을 회색으로 변경 */
-        }
+      .input-field.login-button:hover {
+        background-color: #eeeeee; /* 버튼 색상을 회색으로 변경 */
+      }
 
-        .inner-content {
-            width: 1280px;
-            height: 720px;
-            left: 0px;
-            top: 0px;
-            position: absolute;
-        }
-        #video,
-        #canvas {
+      .inner-content {
+        width: 1280px;
+        height: 720px;
+        left: 0px;
+        top: 0px;
+        position: absolute;
+      }
+      #video,
+      #canvas {
         position: absolute;
         transform: translate(-50%, -50%);
         left: 50%;
         top: 50%;
-        }
-        #video {
+      }
+      #video {
         z-index: 1;
-        }
-        #canvas {
+      }
+      #canvas {
         z-index: 2;
         background: transparent;
-        }
-        @font-face {
-          font-family: 'Escore Dream';
-          src: url('../../SCDream6.otf') format('truetype');
-          font-weight: normal;
-          font-style: normal;
+      }
+      @font-face {
+        font-family: "Escore Dream";
+        src: url("../../SCDream6.otf") format("truetype");
+        font-weight: normal;
+        font-style: normal;
       }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <div class="button" style="font-family: 'Escore Dream', sans-serif;">바른 자세 저장</div>
+      <div class="button" style="font-family: 'Escore Dream', sans-serif">
+        바른 자세 저장
+      </div>
     </div>
     <video id="video" width="640" height="480" autoplay muted></video>
     <canvas id="canvas" width="640" height="480"></canvas>
@@ -95,131 +96,137 @@
       const videoElement = document.getElementById("video");
       const canvasElement = document.getElementById("canvas");
       const canvasCtx = canvasElement.getContext("2d");
-  
+
       // MediaPipe Pose 설정
       const pose = new Pose({
-          locateFile: (file) => {
-              return `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`;
-          },
+        locateFile: (file) => {
+          return `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`;
+        },
       });
-  
+
       pose.setOptions({
-          modelComplexity: 1,
-          smoothLandmarks: true,
-          enableSegmentation: false,
-          smoothSegmentation: false,
-          minDetectionConfidence: 0.5,
-          minTrackingConfidence: 0.5,
+        modelComplexity: 1,
+        smoothLandmarks: true,
+        enableSegmentation: false,
+        smoothSegmentation: false,
+        minDetectionConfidence: 0.5,
+        minTrackingConfidence: 0.5,
       });
-  
+
       // 결과 처리 함수
       let results; // 포즈 결과를 저장할 변수
       function onResults(res) {
-          results = res;
-          canvasCtx.save();
-          canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
-  
-          // 랜드마크 그리기
-          if (results.poseLandmarks) {
-              drawLandmark(canvasCtx, results.poseLandmarks[0]);   // 예시로 몇 가지 랜드마크만 그림
-              drawLandmark(canvasCtx, results.poseLandmarks[7]);
-              drawLandmark(canvasCtx, results.poseLandmarks[8]);
-              drawLandmark(canvasCtx, results.poseLandmarks[11]);
-              drawLandmark(canvasCtx, results.poseLandmarks[12]);
-          }
-  
-          canvasCtx.restore();
+        results = res;
+        canvasCtx.save();
+        canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+
+        // 랜드마크 그리기
+        if (results.poseLandmarks) {
+          drawLandmark(canvasCtx, results.poseLandmarks[0]); // 예시로 몇 가지 랜드마크만 그림
+          drawLandmark(canvasCtx, results.poseLandmarks[7]);
+          drawLandmark(canvasCtx, results.poseLandmarks[8]);
+          drawLandmark(canvasCtx, results.poseLandmarks[11]);
+          drawLandmark(canvasCtx, results.poseLandmarks[12]);
+        }
+
+        canvasCtx.restore();
       }
-  
+
       pose.onResults(onResults);
-  
+
       // 비디오 스트림 시작
       navigator.mediaDevices
-          .getUserMedia({ video: true })
-          .then((stream) => {
-              videoElement.srcObject = stream;
-              videoElement.onloadedmetadata = () => {
-                  videoElement.play();
-              };
-          })
-          .catch((error) => {
-              console.error("웹캠 접근 에러:", error);
-          });
-  
+        .getUserMedia({ video: true })
+        .then((stream) => {
+          videoElement.srcObject = stream;
+          videoElement.onloadedmetadata = () => {
+            videoElement.play();
+          };
+        })
+        .catch((error) => {
+          console.error("웹캠 접근 에러:", error);
+        });
+
       // 랜드마크를 캔버스에 그리는 함수
       function drawLandmark(ctx, landmark) {
-          const x = landmark.x * canvasElement.width;
-          const y = landmark.y * canvasElement.height;
-  
-          ctx.beginPath();
-          ctx.arc(x, y, 5, 0, 2 * Math.PI);
-          ctx.fillStyle = "red";
-          ctx.fill();
+        const x = landmark.x * canvasElement.width;
+        const y = landmark.y * canvasElement.height;
+
+        ctx.beginPath();
+        ctx.arc(x, y, 5, 0, 2 * Math.PI);
+        ctx.fillStyle = "red";
+        ctx.fill();
       }
-  
+
       // 웹캠에서 포즈 감지 시작
       const camera = new Camera(videoElement, {
-          onFrame: async () => {
-              await pose.send({ image: videoElement });
-          },
-          width: 640,
-          height: 480,
+        onFrame: async () => {
+          await pose.send({ image: videoElement });
+        },
+        width: 640,
+        height: 480,
       });
       camera.start();
-  
+
       // 버튼 클릭 이벤트 리스너 추가
-      document.querySelector('.button').addEventListener('click', () => {
-          saveUserPose();
+      document.querySelector(".button").addEventListener("click", () => {
+        saveUserPose();
       });
-  
+
       // 사용자 포즈 저장 함수
       function saveUserPose() {
-          if (!results || !results.poseLandmarks) {
-              console.error('포즈 데이터가 없습니다.');
-              return;
-          }
-  
-          // 랜드마크 데이터 추출
-          const nose = getLandmarkString(results.poseLandmarks[0]);
-          const leftEar = getLandmarkString(results.poseLandmarks[7]);
-          const rightEar = getLandmarkString(results.poseLandmarks[8]);
-          const leftShoulder = getLandmarkString(results.poseLandmarks[11]);
-          const rightShoulder = getLandmarkString(results.poseLandmarks[12]);
-          const userId = 'test'; // 실제 사용자 ID로 대체
-  
-          // API 요청 데이터
-          const data = {
-              userId,
-              nose,
-              leftEar,
-              rightEar,
-              leftShoulder,
-              rightShoulder,
-          };
-  
-          // API 요청 보내기
-          fetch('http://3.34.146.225:3000/users/origin', {
-              method: 'POST',
-              headers: {
-                  'Content-Type': 'application/json',
-              },
-              body: JSON.stringify(data),
+        if (!results || !results.poseLandmarks) {
+          console.error("포즈 데이터가 없습니다.");
+          return;
+        }
+
+        // 랜드마크 데이터 추출
+        const nose = getLandmarkString(results.poseLandmarks[0]);
+        const leftEar = getLandmarkString(results.poseLandmarks[7]);
+        const rightEar = getLandmarkString(results.poseLandmarks[8]);
+        const leftShoulder = getLandmarkString(results.poseLandmarks[11]);
+        const rightShoulder = getLandmarkString(results.poseLandmarks[12]);
+        const userId = localStorage.getItem("userId");
+
+        if (userId) {
+          // userId가 존재하면, userId를 사용하는 로직을 여기에 추가
+          console.log("사용자 ID:", userId);
+        } else {
+          // userId가 없는 경우, 에러 메시지를 출력
+          console.error("로그인된 사용자 ID를 찾을 수 없습니다.");
+        }
+
+        // API 요청 데이터
+        const data = {
+          userId,
+          nose,
+          leftEar,
+          rightEar,
+          leftShoulder,
+          rightShoulder,
+        };
+
+        // API 요청 보내기
+        fetch("http://3.34.146.225:3000/users/origin", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        })
+          .then((response) => response.text())
+          .then((data) => {
+            console.log(data);
           })
-          .then(response => response.text())
-          .then(data => {
-              console.log(data);
-          })
-          .catch(error => {
-              console.error('Error:', error);
+          .catch((error) => {
+            console.error("Error:", error);
           });
       }
-  
+
       // 랜드마크 좌표를 문자열로 변환하는 함수
       function getLandmarkString(landmark) {
-          return `${landmark.x},${landmark.y},${landmark.z}`;
+        return `${landmark.x},${landmark.y},${landmark.z}`;
       }
-  </script>
-  
-
-</body>
+    </script>
+  </body>
 </html>
