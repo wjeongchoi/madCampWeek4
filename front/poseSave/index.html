@@ -217,6 +217,7 @@
           .then((response) => response.text())
           .then((data) => {
             console.log(data);
+            window.location.href = '../settings/index.html';
           })
           .catch((error) => {
             console.error("Error:", error);
