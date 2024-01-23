@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <title>포즈 저장</title>
+    <script src="../common.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils"></script>
     <script
       src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js"
@@ -176,7 +177,7 @@
       // 사용자 포즈 저장 함수
       function saveUserPose() {
         if (!results || !results.poseLandmarks) {
-          console.error("포즈 데이터가 없습니다.");
+          showToast("포즈 데이터가 없습니다.", "red"); // alert 대신 showToast 사용
           return;
         }
 
@@ -217,9 +218,14 @@
           .then((response) => response.text())
           .then((data) => {
             console.log(data);
+            showToast("포즈 저장 완료", "green"); // 성공 메시지를 표시
+            setTimeout(function () {
+              window.location.href = "../settings/index.html";
+            }, 3000); // 성공 메시지 표시 후 3초 뒤에 페이지 이동
           })
           .catch((error) => {
             console.error("Error:", error);
+            showToast("포즈 저장 실패", "red"); // 실패 메시지를 표시
           });
       }
 

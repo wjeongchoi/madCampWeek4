@@ -3,6 +3,7 @@
 <head>
     <title>Settings Page</title>
     <meta charset="UTF-8">
+    <script src="../common.js"></script>
     <style>
         /* Custom styles based on the provided CSS */
         body {
@@ -209,11 +210,46 @@
             font-weight: normal;
             font-style: normal;
         }
+
+        /* 모달 스타일 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+
     </style>
 </head>
 <body>
     <div class="settings-form">
         <!-- Main content area -->
+
+        <!-- 모달 시작 -->
+        <div id="myModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <p>계정을 삭제하시려면 비밀번호를 입력하세요.</p>
+                <input type="password" id="passwordInput">
+                <button onclick="deleteUser()">확인</button>
+            </div>
+        </div>
+        <!-- 모달 끝 -->
+
 
         <div style="width: 365px; height: 485px; left: 450px; top: 102px;">
             
@@ -265,22 +301,22 @@
         <!--버튼 모음 form-->
         <div style="width: 100%; height: 100%; position: relative; top: 430px;">
             <!-- 자세 재설정 버튼 -->
-            <button class="button-style">
+            <button class="button-style" onclick="redirectToPoseSave()">
                 <div class="text-style text-medium" style="text-align: center; color: #6E8977;">자세 재설정</div>
             </button>
 
             <!-- 확인 버튼 -->
-            <button class="button-style" style="top: 73px;">
+            <button class="button-style button-confirm" style="top: 73px;">
                 <div class="text-style text-medium" style="text-align: center; color: #6E8977;">확인</div>
             </button>
 
             <!-- 로그아웃 버튼 -->
-            <button class="transparent-button" style="left: 295px; top: 128px; position: absolute;">
+            <button class="transparent-button" style="left: 295px; top: 128px; position: absolute;" onclick="logout()">
                 <div class="text-style text-medium" style="white-space: nowrap;">로그아웃</div>
             </button>
 
             <!-- 탈퇴 버튼 -->
-            <button class="transparent-button" style="left: 328px; top: 158px; position: absolute;">
+            <button class="transparent-button" style="left: 328px; top: 158px; position: absolute;" onclick="promptForDeletion()">
                 <div class="text-style text-medium" style="white-space: nowrap;">탈퇴</div>
             </button>
         </div>
@@ -290,17 +326,17 @@
         </div>
     </div>
     <script>
-        // Function to get the state of the toggle buttons
+        // 토글 버튼의 상태를 가져오는 함수
         function getToggleState(toggleId) {
-            return document.getElementById(toggleId).classList.contains('active') ? true : false;
+            return document.getElementById(toggleId).classList.contains('active');
         }
     
-        // Function to get the selected value of the dropdown
+        // 드롭다운의 선택된 값을 가져오는 함수
         function getDropdownValue() {
             return document.querySelector('.dropdown').value;
         }
     
-        // Event listeners for toggle buttons
+        // 토글 버튼에 대한 이벤트 리스너 추가
         document.getElementById('toggleButton1').addEventListener('click', function() {
             this.classList.toggle('active');
         });
@@ -314,47 +350,101 @@
             this.classList.toggle('active');
         });
     
-        // Event listener for the confirm button
+        // 확인 버튼에 대한 이벤트 리스너 추가
         document.querySelector('.button-confirm').addEventListener('click', function() {
-            // Collect the state of the settings
             const screen = getToggleState('toggleButton1') ? 1 : 0;
             const turtle = getToggleState('toggleButton2');
             const close = getToggleState('toggleButton3');
             const tilted = getToggleState('toggleButton4');
             const alert = parseInt(getDropdownValue().replace('option', ''), 10);
-    
-            // Define user_id (this should be dynamically set based on the logged-in user)
             const user_id = localStorage.getItem("userId");
-
+    
             if (user_id) {
-            // userId가 존재하면, userId를 사용하는 로직을 여기에 추가
-            console.log("사용자 ID:", user_id);
+                fetch('http://3.34.146.225:3000/setting', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ user_id, turtle, close, tilted, screen, alert })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.text();
+                })
+                .then(result => {
+                    showToast("설정이 저장되었습니다.", "green");
+                })
+                .catch(error => {
+                    showToast('Error updating settings: ' + error, "red");
+                });
             } else {
-            // userId가 없는 경우, 에러 메시지를 출력
-            console.error("로그인된 사용자 ID를 찾을 수 없습니다.");
+                showToast("로그인된 사용자 ID를 찾을 수 없습니다.", "red");
             }
-
-            // Send the data to the server
-            fetch('http://3.34.146.225:3000/setting', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ user_id, turtle, close, tilted, screen, alert })
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.text();
-            })
-            .then(result => {
-                console.log('Settings updated successfully!'); // Notify the user of success
-            })
-            .catch(error => {
-                console.log('Error updating settings: ' + error); // Notify the user of an error
-            });
         });
+    
+        // 자세 재설정 페이지로 리디렉션하는 함수
+        function redirectToPoseSave() {
+            window.location.href = '../poseSave/index.html';
+        }
+    
+        // 로그아웃 함수
+        function logout() {
+            localStorage.removeItem('userId');
+            window.location.href = '../login/index.html';
+        }
+    
+        // 계정 삭제를 위한 프롬프트 표시 함수
+        function promptForDeletion() {
+            document.getElementById("myModal").style.display = "block";
+        }
+    
+        // 사용자 삭제 함수
+        function deleteUser() {
+            const password = document.getElementById("passwordInput").value;
+            const id = localStorage.getItem("userId");
+    
+            if (id) {
+                fetch('http://3.34.146.225:3000/users/delete', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ id, password })
+                })
+                .then(response => {
+                    if (response.ok) {
+                        showToast("계정이 삭제되었습니다.", "green");
+                        localStorage.removeItem('userId');
+                        setTimeout(function () {
+                            window.location.href = '../login/index.html';
+                            }, 3000);
+                    } else {
+                        showToast("비밀번호가 일치하지 않거나 계정을 찾을 수 없습니다.", "red");
+                    }
+                })
+                .catch(error => {
+                    showToast("오류가 발생했습니다.", "red");
+                });
+            } else {
+                showToast("로그인된 사용자 ID를 찾을 수 없습니다.", "red");
+            }
+            document.getElementById("myModal").style.display = "none";
+        }
+    
+        // 모달 닫기 로직
+        var modal = document.getElementById("myModal");
+        var span = document.getElementsByClassName("close")[0];
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+    
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }    
     </script>
     
 </body>

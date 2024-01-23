@@ -1,169 +1,186 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8" />
+    <script src="../common.js"></script>
     <title>등록 페이지</title>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <style>
-        body {
-            background-color: #F5F9DE;
-            margin: 0;
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-image: url('background.png');
-            background-size: cover;
-            background-repeat: no-repeat;
-        }
-        .container {
-            width: 300px;
-            height: 354px;
-            position: relative;
-            padding: 10px;
-        }
-        .input-field {
-            background-color: transparent; 
-            outline: none;
-            width: 100%;
-            height: 45px;
-            margin-bottom: 15px;
-            border-radius: 4px;
-            border: 3px #6E8977 solid;
-            padding-left: 35px;
-            box-sizing: border-box;
-            position: relative; /* 입력 필드에 z-index를 적용하기 위해 relative 설정 */
-            z-index: 1000;
-            color: #6E8977;
-            line-height: 20px;
-            word-wrap: break-word;
-            font-size: 18px;
-            font-family: 'Escore Dream', sans-serif;
-        }
-        .icon {
-            width: 20px;
-            height: 20px;
-            position: absolute;
-            left: 12px;
-            top: 13px;
-            z-index: 0;
-        }
-        .sign-up-button {
-            width: 100%;
-            height: 45px;
-            border-radius: 4px;
-            border: none;
-            background-color: #FFFFFF;
-            color: #6E8977;
-            border: 3px #6E8977 solid;
-            line-height: 20px;
-            word-wrap: break-word;
-            font-size: 20px;
-            font-weight: 700;
-            font-family: 'Escore Dream', sans-serif;
-            
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .sign-up-button:hover {
-            background-color: #EEEEEE;
-        }
+      body {
+        background-color: #f5f9de;
+        margin: 0;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-image: url("background.png");
+        background-size: cover;
+        background-repeat: no-repeat;
+      }
+      .container {
+        width: 300px;
+        height: 354px;
+        position: relative;
+        padding: 10px;
+      }
+      .input-field {
+        background-color: transparent;
+        outline: none;
+        width: 100%;
+        height: 45px;
+        margin-bottom: 15px;
+        border-radius: 4px;
+        border: 3px #6e8977 solid;
+        padding-left: 35px;
+        box-sizing: border-box;
+        position: relative; /* 입력 필드에 z-index를 적용하기 위해 relative 설정 */
+        z-index: 1000;
+        color: #6e8977;
+        line-height: 20px;
+        word-wrap: break-word;
+        font-size: 18px;
+        font-family: "Escore Dream", sans-serif;
+      }
+      .icon {
+        width: 20px;
+        height: 20px;
+        position: absolute;
+        left: 12px;
+        top: 13px;
+        z-index: 0;
+      }
+      .sign-up-button {
+        width: 100%;
+        height: 45px;
+        border-radius: 4px;
+        border: none;
+        background-color: #ffffff;
+        color: #6e8977;
+        border: 3px #6e8977 solid;
+        line-height: 20px;
+        word-wrap: break-word;
+        font-size: 20px;
+        font-weight: 700;
+        font-family: "Escore Dream", sans-serif;
 
-        @font-face {
-            font-family: 'Escore Dream';
-            src: url('../../SCDream6.otf') format('truetype');
-            font-weight: normal;
-            font-style: normal;
-        }
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+      .sign-up-button:hover {
+        background-color: #eeeeee;
+      }
+
+      @font-face {
+        font-family: "Escore Dream";
+        src: url("../../SCDream6.otf") format("truetype");
+        font-weight: normal;
+        font-style: normal;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container">
-        <!-- User ID -->
-        <img src="user.svg" alt="User Icon" class="icon" style="top: 22px; left: 18px;">
-        <input type="text" placeholder="아이디" id="user-id" class="input-field">
+      <!-- User ID -->
+      <img
+        src="user.svg"
+        alt="User Icon"
+        class="icon"
+        style="top: 22px; left: 18px"
+      />
+      <input
+        type="text"
+        placeholder="아이디"
+        id="user-id"
+        class="input-field"
+      />
 
-        <!-- Nickname -->
-        <img src="user.svg" alt="User Icon" class="icon" style="top: 82px; left: 18px;">
-        <input type="text" placeholder="닉네임" id="nickname" class="input-field">
+      <!-- Nickname -->
+      <img
+        src="user.svg"
+        alt="User Icon"
+        class="icon"
+        style="top: 82px; left: 18px"
+      />
+      <input
+        type="text"
+        placeholder="닉네임"
+        id="nickname"
+        class="input-field"
+      />
 
-        <!-- Password -->
-        <img src="lock.svg" alt="Lock Icon" class="icon" style="top: 142px; left: 18px;">
-        <input type="password" placeholder="비밀번호" id="password" class="input-field">
+      <!-- Password -->
+      <img
+        src="lock.svg"
+        alt="Lock Icon"
+        class="icon"
+        style="top: 142px; left: 18px"
+      />
+      <input
+        type="password"
+        placeholder="비밀번호"
+        id="password"
+        class="input-field"
+      />
 
-        <!-- Password Confirmation -->
-        <img src="lock.svg" alt="Lock Icon" class="icon" style="top: 202px; left: 18px;">
-        <input type="password" placeholder="비밀번호 확인" id="confirm-password" class="input-field">
+      <!-- Password Confirmation -->
+      <img
+        src="lock.svg"
+        alt="Lock Icon"
+        class="icon"
+        style="top: 202px; left: 18px"
+      />
+      <input
+        type="password"
+        placeholder="비밀번호 확인"
+        id="confirm-password"
+        class="input-field"
+      />
 
-        <!-- Sign Up Button -->
-        <button class="sign-up-button" onclick="register()">회원가입</button>
+      <!-- Sign Up Button -->
+      <button class="sign-up-button" onclick="register()">회원가입</button>
     </div>
-
     <script>
-        function register() {
-    // 각 입력 필드의 값을 가져옴
-    var userId = document.getElementById('user-id').value;
-    var nickname = document.getElementById('nickname').value;
-    var password = document.getElementById('password').value;
-    var confirmPassword = document.getElementById('confirm-password').value;
+      function register() {
+        var userId = document.getElementById("user-id").value;
+        var nickname = document.getElementById("nickname").value;
+        var password = document.getElementById("password").value;
+        var confirmPassword = document.getElementById("confirm-password").value;
 
-    // 콘솔에 출력 (실제로는 여기에 회원가입 로직을 구현)
-    console.log('User ID:', userId);
-    console.log('Nickname:', nickname);
-    console.log('Password:', password);
-    console.log('Confirm Password:', confirmPassword);
-    if(password === confirmPassword) {
-        // fetch 요청
-        fetch('http://3.34.146.225:3000/users/register', { // Replace 'https://your-domain.com' with your actual domain
-            method: 'POST',
+        if (password === confirmPassword) {
+          fetch("http://3.34.146.225:3000/users/register", {
+            method: "POST",
             headers: {
-                'Content-Type': 'application/json'
+              "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                id: userId,
-                username: nickname,
-                password: password
+              id: userId,
+              username: nickname,
+              password: password,
+            }),
+          })
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error(
+                  "Network response was not ok " + response.statusText
+                );
+              }
+              return response.text(); // response를 text로 처리
             })
-        }).then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok ' + response.statusText);
-            }
-            return response.json();
-        }).then(data => {
-            console.log(data);
-        }).catch((error) => {
-            console.error('There has been a problem with your fetch operation:', error);
-        });
-    } else {
-        // 토스트 메시지 표시
-        showToast("비밀번호가 일치하지 않습니다");
-    }
-}
-
-    
-        function showToast(message) {
-            // 토스트 메시지를 생성하고 표시
-            var toast = document.createElement("div");
-            toast.innerText = message;
-            toast.style.position = "fixed";
-            toast.style.bottom = "20px";
-            toast.style.left = "50%";
-            toast.style.transform = "translateX(-50%)";
-            toast.style.backgroundColor = "red";
-            toast.style.color = "white";
-            toast.style.padding = "10px";
-            toast.style.borderRadius = "5px";
-            toast.style.zIndex = "1000";
-    
-            document.body.appendChild(toast);
-    
-            // 몇 초 후에 토스트 메시지 사라지게 하기
-            setTimeout(function() {
-                document.body.removeChild(toast);
-            }, 3000);
+            .then((responseText) => {
+              showToast(`회원가입 완료. 로그인해주세요`); // 성공 메시지는 녹색 배경으로 표시
+              setTimeout(function () {
+                window.location.href = "../login/index.html";
+              }, 3000);
+            })
+            .catch((error) => {
+              showToast("회원가입 중 오류가 발생했습니다.", "red"); // 오류 메시지는 빨간색 배경으로 표시
+            });
+        } else {
+          showToast("비밀번호가 일치하지 않습니다", "red");
         }
+      }
     </script>
-</body>
+  </body>
 </html>
