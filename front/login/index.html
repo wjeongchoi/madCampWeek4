@@ -3,6 +3,7 @@
   <head>
     <title>로그인 페이지</title>
     <meta charset="UTF-8" />
+    <script src="../common.js"></script>
 
     <style>
       body {
@@ -228,15 +229,17 @@
         .then((text) => {
           if (text === "User not found") {
             // 존재하지 않는 아이디인 경우 알림
-            alert("존재하지 않는 아이디입니다.");
+            showToast("존재하지 않는 아이디입니다.", "red");
           } else if (text === "Password does not match") {
             // 비밀번호 불일치
-            alert("비밀번호가 일치하지 않습니다.");
+            showToast("비밀번호가 일치하지 않습니다.", "red");
           } else if (text === "User logged in successfully") {
             // 로그인 성공
             localStorage.setItem("userId", id);
-            alert("로그인 성공");
-            window.location.href = "../chart/index.html";
+            showToast("로그인 성공", "green");
+            setTimeout(function () {
+                window.location.href = "../chart/index.html";
+              }, 3000);
           } else {
             // 그 외의 오류
             alert("로그인 오류: " + text);
@@ -244,7 +247,7 @@
         })
         .catch((error) => {
           console.error(error);
-          alert("로그인 중 오류가 발생했습니다.");
+          showToast("로그인 중 오류가 발생했습니다.", "red");
         });
     }
   </script>
