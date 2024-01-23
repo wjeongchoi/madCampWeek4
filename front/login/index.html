@@ -1,225 +1,251 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <title>로그인 페이지</title>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
 
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: Montserrat;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background: rgba(237, 244, 193, 0.52);
-            background-image: url('background.png');
-            background-size: cover; /* 배경 이미지 크기 조정 */
-            background-position: center;
-        }
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: Montserrat;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background: rgba(237, 244, 193, 0.52);
+        background-image: url("background.png");
+        background-size: cover; /* 배경 이미지 크기 조정 */
+        background-position: center;
+      }
 
+      .form-container {
+        position: relative;
+        width: 300px; /* 로그인 폼 너비 설정 */
+      }
+
+      .input-style {
+        background-color: transparent; /* 배경 투명 */
+        border: none; /* 테두리 제거 */
+        outline: none; /* 포커스 시 테두리 제거 */
+
+        color: #6e8977;
+        line-height: 20px;
+        word-wrap: break-word;
+        font-size: 18px;
+        font-family: "Escore Dream", sans-serif;
+        /*font-weight: 700;*/
+      }
+
+      .text-style {
+        color: #6e8977;
+        text-transform: uppercase;
+        line-height: 20px;
+        word-wrap: break-word;
+      }
+
+      .id-text,
+      .password-text {
+        font-size: 18px;
+        font-weight: 700;
+        font-family: "Escore Dream", sans-serif;
+      }
+
+      .login-text {
+        font-size: 20px;
+        font-weight: 700;
+        text-align: center;
+        font-family: "Escore Dream", sans-serif;
+      }
+
+      .signup-text {
+        font-size: 16px;
+        font-weight: 500;
+        font-family: "Escore Dream", sans-serif;
+      }
+
+      .input-field {
+        width: 100%;
+        height: 45px;
+        border-radius: 4px;
+        border: 3px #6e8977 solid;
+        display: flex;
+        align-items: center;
+        padding-left: 45px;
+        margin-bottom: 10px; /* 각 필드 사이 간격 */
+        position: relative;
+      }
+      .input-field.login-button {
+        background-color: #ffffff; /* 로그인 버튼 색상 변경 */
+        justify-content: center; /* 가운데 정렬 */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+
+        color: #6e8977;
+        line-height: 20px;
+        word-wrap: break-word;
+        font-size: 20px;
+        font-weight: 700;
+        font-family: "Escore Dream", sans-serif;
+      }
+
+      .input-field.login-button:hover {
+        background-color: #eeeeee; /* 버튼 색상을 회색으로 변경 */
+      }
+
+      .icon {
+        position: absolute;
+        left: 10px; /* 왼쪽 여백 */
+        top: 55%; /* 상단에서 50% 위치 */
+        transform: translateY(-50%); /* 세로 중앙 정렬 */
+      }
+
+      .icon img {
+        width: 20px;
+        height: 20px;
+      }
+
+      @media (max-width: 600px) {
         .form-container {
-            position: relative;
-            width: 300px; /* 로그인 폼 너비 설정 */
+          width: 80%; /* 화면이 작을 때 폼 크기 조정 */
         }
+      }
 
-        .input-style {
-            background-color: transparent; /* 배경 투명 */
-            border: none; /* 테두리 제거 */
-            outline: none; /* 포커스 시 테두리 제거 */
+      .background-design {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1; /* 배경을 폼 뒤에 표시 */
+      }
 
-    color: #6E8977;
-    line-height: 20px;
-    word-wrap: break-word;
-    font-size: 18px;
-    font-family: 'Escore Dream', sans-serif;
-    /*font-weight: 700;*/
-        }
+      .title-image {
+        width: 100%; /* 이미지 너비 100% */
+        display: flex;
+        justify-content: center; /* 이미지 가운데 정렬 */
+        margin-bottom: 20px; /* 아이디 필드와의 간격 */
+      }
 
-        .text-style {
-            color: #6E8977;
-            text-transform: uppercase;
-            line-height: 20px;
-            word-wrap: break-word;
-            
-        }
+      .title-image img {
+        max-width: 100%; /* 이미지 최대 너비 조정 */
+        height: auto; /* 이미지 높이 자동 조정 */
+      }
 
-        .id-text, .password-text {
-            font-size: 18px;
-            font-weight: 700;
-            font-family: 'Escore Dream', sans-serif;
-        }
+      .signup-link-container {
+        text-align: right; /* 텍스트를 오른쪽 정렬 */
+        padding-right: 10px; /* 오른쪽 패딩 조정 */
+      }
 
-        .login-text {
-            font-size: 20px;
-            font-weight: 700;
-            text-align: center;
-            font-family: 'Escore Dream', sans-serif;
-        }
+      @font-face {
+        font-family: "Escore Dream";
+        src: url("../../SCDream6.otf") format("truetype");
+        font-weight: normal;
+        font-style: normal;
+      }
 
-        .signup-text {
-            font-size: 16px;
-            font-weight: 500;
-            font-family: 'Escore Dream', sans-serif;
-        }
-
-        .input-field {
-            width: 100%;
-            height: 45px;
-            border-radius: 4px;
-            border: 3px #6E8977 solid;
-            display: flex;
-            align-items: center;
-            padding-left: 45px;
-            margin-bottom: 10px; /* 각 필드 사이 간격 */
-            position: relative;
-        }
-        .input-field.login-button {
-            background-color: #FFFFFF; /* 로그인 버튼 색상 변경 */
-            justify-content: center; /* 가운데 정렬 */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-
-            color: #6E8977;
-            line-height: 20px;
-            word-wrap: break-word;
-            font-size: 20px;
-            font-weight: 700;
-            font-family: 'Escore Dream', sans-serif;
-        }
-
-        .input-field.login-button:hover {
-            background-color: #EEEEEE; /* 버튼 색상을 회색으로 변경 */
-        }
-
-        .icon {
-            position: absolute;
-            left: 10px; /* 왼쪽 여백 */
-            top: 55%; /* 상단에서 50% 위치 */
-            transform: translateY(-50%); /* 세로 중앙 정렬 */
-        }
-
-        .icon img {
-            width: 20px;
-            height: 20px;
-        }
-
-        @media (max-width: 600px) {
-            .form-container {
-                width: 80%; /* 화면이 작을 때 폼 크기 조정 */
-            }
-        }
-
-        .background-design {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1; /* 배경을 폼 뒤에 표시 */
-        }
-
-        .title-image {
-            width: 100%; /* 이미지 너비 100% */
-            display: flex;
-            justify-content: center; /* 이미지 가운데 정렬 */
-            margin-bottom: 20px; /* 아이디 필드와의 간격 */
-        }
-
-        .title-image img {
-            max-width: 100%; /* 이미지 최대 너비 조정 */
-            height: auto; /* 이미지 높이 자동 조정 */
-        }
-
-        .signup-link-container {
-            text-align: right; /* 텍스트를 오른쪽 정렬 */
-            padding-right: 10px; /* 오른쪽 패딩 조정 */
-        }
-
-        @font-face {
-            font-family: 'Escore Dream';
-            src: url('../../SCDream6.otf') format('truetype');
-            font-weight: normal;
-            font-style: normal;
-        }
-
-        /* ... 기존의 다른 스타일 ... */
+      /* ... 기존의 다른 스타일 ... */
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <!--배경-->
     <div class="form-container">
-        <div class="title-image">
-            <img src="tutleLine2.png" alt="Title Image">
-        </div>
+      <div class="title-image">
+        <img src="tutleLine2.png" alt="Title Image" />
+      </div>
 
-        <!-- 로그인 폼 내용 -->
-        <!-- 아이디 필드 -->
-        <div class="input-field">
-            <div class="icon">
-                <img src="./user.svg" alt="User Icon" />
-            </div>
-            <div>
-                <input type="text" placeholder="아이디" id="id" value="" class="input-style">
-            </div>
+      <!-- 로그인 폼 내용 -->
+      <!-- 아이디 필드 -->
+      <div class="input-field">
+        <div class="icon">
+          <img src="./user.svg" alt="User Icon" />
         </div>
-
-        <!-- 비밀번호 필드 -->
-        <div class="input-field">
-            <div class="icon">
-                <img src="./lock.svg" alt="Lock Icon" />
-            </div>
-            <div>
-                <input type="password" placeholder="비밀번호" id="password" value="" class="input-style">
-            </div>
-        </div>
-
-        <!-- 로그인 버튼 -->
         <div>
-            <input type="button" onclick='onLogin()' value="로그인" class="input-field login-button">
+          <input
+            type="text"
+            placeholder="아이디"
+            id="id"
+            value=""
+            class="input-style"
+          />
         </div>
+      </div>
 
-        <!-- 회원가입 링크 -->
-        <div style="position: relative; text-align: right; padding-left: 30px;">
-            <a href="../signUp/index.html" class="text-style signup-text">회원가입 하러가기</a>
+      <!-- 비밀번호 필드 -->
+      <div class="input-field">
+        <div class="icon">
+          <img src="./lock.svg" alt="Lock Icon" />
         </div>
+        <div>
+          <input
+            type="password"
+            placeholder="비밀번호"
+            id="password"
+            value=""
+            class="input-style"
+          />
+        </div>
+      </div>
+
+      <!-- 로그인 버튼 -->
+      <div>
+        <input
+          type="button"
+          onclick="onLogin()"
+          value="로그인"
+          class="input-field login-button"
+        />
+      </div>
+
+      <!-- 회원가입 링크 -->
+      <div style="position: relative; text-align: right; padding-left: 30px">
+        <a href="../signUp/index.html" class="text-style signup-text"
+          >회원가입 하러가기</a
+        >
+      </div>
     </div>
-</body>
-<script>
-function onLogin() {
-    const id = document.getElementById('id').value;
-    const password = document.getElementById('password').value;
+  </body>
+  <script>
+    function onLogin() {
+      const id = document.getElementById("id").value;
+      const password = document.getElementById("password").value;
 
-    const data = {
+      const data = {
         id: id,
-        password: password
-    };
+        password: password,
+      };
 
-    fetch('http://3.34.146.225:3000/users/login', {
-        method: 'POST',
+      fetch("http://3.34.146.225:3000/users/login", {
+        method: "POST",
         headers: {
-            'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(data)
-    })
-    .then(response => {
-        console.log(response);
-
-        if (response.ok) {
-            // 로그인 성공시, 사용자 아이디를 로컬 스토리지에 저장
-            localStorage.setItem('userId', id);
-            window.location.href = '../chart/index.html';
-        }
-    })
-    .catch(error => {
-        console.error(error);
-        // 요청 실패 시 처리
-    });
-}
-
-</script>
-
+        body: JSON.stringify(data),
+      })
+        .then((response) => response.text()) // 서버로부터 텍스트 응답을 받음
+        .then((text) => {
+          if (text === "User not found") {
+            // 존재하지 않는 아이디인 경우 알림
+            alert("존재하지 않는 아이디입니다.");
+          } else if (text === "Password does not match") {
+            // 비밀번호 불일치
+            alert("비밀번호가 일치하지 않습니다.");
+          } else if (text === "User logged in successfully") {
+            // 로그인 성공
+            localStorage.setItem("userId", id);
+            alert("로그인 성공");
+            window.location.href = "../chart/index.html";
+          } else {
+            // 그 외의 오류
+            alert("로그인 오류: " + text);
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+          alert("로그인 중 오류가 발생했습니다.");
+        });
+    }
+  </script>
 </html>
