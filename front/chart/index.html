@@ -316,12 +316,20 @@
             }
         };
     
-        // Call the fetch functions when the page loads
         document.addEventListener('DOMContentLoaded', () => {
-            fetchUsageData();
-            fetchPoseData();
-            fetchWarningData();
-        });
+        const userId = localStorage.getItem("userId");
+        if (!userId) {
+            alert("먼저 로그인해주세요");
+            window.location.href = '../login/index.html';
+            return; // userId가 없으면 나머지 스크립트 실행 중단
+        }
+
+        // userId가 있을 때 차트 데이터 가져오기
+        fetchUsageData();
+        fetchPoseData();
+        fetchWarningData();
+    });
+
     
         // Create the charts
         const myChart1 = new Chart(document.getElementById('myChart1'), config1);
