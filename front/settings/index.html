@@ -280,7 +280,7 @@
             </button>
 
             <!-- 탈퇴 버튼 -->
-            <button class="transparent-button" style="left: 328px; top: 158px; position: absolute;">
+            <button class="transparent-button" style="left: 328px; top: 158px; position: absolute;" onclick="promptForDeletion()">
                 <div class="text-style text-medium" style="white-space: nowrap;">탈퇴</div>
             </button>
         </div>
@@ -365,6 +365,45 @@
 
             // 로그인 페이지로 리디렉션
             window.location.href = '../login/index.html';
+        }
+
+        function promptForDeletion() {
+            // 사용자에게 비밀번호를 입력받음
+            const password = prompt("계정을 삭제하시려면 비밀번호를 입력하세요.");
+            if (password) {
+                deleteUser(password);
+            }
+        }
+
+        function deleteUser(password) {
+            const id = localStorage.getItem("userId");
+
+            if (!id) {
+                alert("로그인된 사용자 ID를 찾을 수 없습니다.");
+                return;
+            }
+
+            // API 요청 보내기
+            fetch('http://3.34.146.225:3000/users/delete', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ id, password })
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert("계정이 삭제되었습니다.");
+                    // 로그아웃 처리
+                    localStorage.removeItem('userId');
+                    window.location.href = '../login/index.html';
+                } else {
+                    alert("비밀번호가 일치하지 않거나 계정을 찾을 수 없습니다.");
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
         }
     </script>
     
