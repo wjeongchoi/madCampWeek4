@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta charset="UTF-8" />
+    <script src="../common.js"></script>
     <title>등록 페이지</title>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <style>
@@ -179,26 +180,6 @@
         } else {
           showToast("비밀번호가 일치하지 않습니다", "red");
         }
-      }
-
-      function showToast(message, backgroundColor = "gray") {
-        var toast = document.createElement("div");
-        toast.innerText = message;
-        toast.style.position = "fixed";
-        toast.style.top = "20px";
-        toast.style.left = "50%";
-        toast.style.transform = "translateX(-50%)";
-        toast.style.backgroundColor = backgroundColor; // 배경색 설정
-        toast.style.color = "white";
-        toast.style.padding = "10px";
-        toast.style.borderRadius = "5px";
-        toast.style.zIndex = "1000";
-
-        document.body.appendChild(toast);
-
-        setTimeout(function () {
-          document.body.removeChild(toast);
-        }, 3000);
       }
     </script>
   </body>
