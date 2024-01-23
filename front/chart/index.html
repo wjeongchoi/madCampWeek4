@@ -92,6 +92,13 @@
                     numbers.push(item.usage_time);
                 });
                 return numbers;
+            },
+            pose: (dataGet) => {
+                const numbers = [];
+                dataGet.forEach(item => {
+                    numbers.push(item.warning_count);
+                });
+                return numbers;
             }
         };
     
@@ -114,10 +121,40 @@
                     console.error('There has been a problem with your fetch operation:', error);
                 });
         }
+
+        // Fetch usage data from the API for chart 1
+        function fetchPoseData() {
+            const date = '2024-01-23';
+            const userId = 'test';
+    
+            fetch(`http://3.34.146.225:3000/warning/time?date=${date}&user_id=${userId}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok ' + response.statusText);
+                    }
+                    return response.json();
+                })
+                .then(dataGet => {
+                    updateChart1WithPoseData(dataGet);
+                })
+                .catch(error => {
+                    console.error('There has been a problem with your fetch operation:', error);
+                });
+        }
+        
     
         function updateChart1WithData(dataGet) {
             myChart1.data.labels = Utils.months({ count: 24 });
             myChart1.data.datasets[0].data = Utils.labtop(dataGet);
+            myChart1.data.datasets[0].backgroundColor = Utils.CHART_COLORS.red;
+            myChart1.update();
+        }
+
+        function updateChart1WithPoseData(dataGet) {
+            myChart1.data.labels = Utils.months({ count: 24 });
+            myChart1.data.datasets[1].data = Utils.pose(dataGet);
+            console.log(dataGet);
+            myChart1.data.datasets[1].backgroundColor = Utils.CHART_COLORS.blue;
             myChart1.update();
         }
     
@@ -128,14 +165,31 @@
                 labels: Utils.months({count: 24}),
                 datasets: [{
                     label: '사용 시간',
-                    backgroundColor: Utils.CHART_COLORS.red,
+                    backgroundColor: [],
                     data: [] // initial empty data
-                }]
+                },
+                {
+                    label: '나쁜 자세 시간',
+                    backgroundColor: [],
+                    data: [] // initial empty data
+                }
+                ]
             },
             options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Chart.js Bar Chart - Stacked'
+                    },
+                },
+                responsive: true,
                 scales: {
-                    x: { stacked: true },
-                    y: { stacked: true }
+                    x: {
+                        stacked: true,
+                    },
+                    y: {
+                        stacked: true
+                    }
                 }
             }
         };
@@ -210,6 +264,7 @@
         // Call the fetch functions when the page loads
         document.addEventListener('DOMContentLoaded', () => {
             fetchUsageData();
+            fetchPoseData();
             fetchWarningData();
         });
     
