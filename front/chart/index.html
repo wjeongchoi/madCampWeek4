@@ -99,8 +99,9 @@
       <div class="chart-title" id="title2">나의 나쁜 자세</div>
       <canvas id="myChart2" width="404" height="566"></canvas>
     </div>
-    <button class="custom-button">
+    <button class="custom-button" onclick="redirectToSettings()">
         <img src="./setting.png" />
+    </button>
     <script>
         // Utils for chart 1
         const Utils = {
@@ -325,6 +326,10 @@
         // Create the charts
         const myChart1 = new Chart(document.getElementById('myChart1'), config1);
         const myChart2 = new Chart(document.getElementById('myChart2'), config2);
+
+        function redirectToSettings() {
+            window.location.href = '../settings/index.html';
+        }
     </script>
     
   </body>
