@@ -50,10 +50,27 @@ router.post('/:type', function(req, res) {
       if (error) {
         res.status(500).send('Error in fetching warning statistics: ' + error.message);
       } else {
-        if (results.length === 0) {
+        // 24시간 배열 생성
+        let hours = {};
+        for (let i = 0; i < 24; i++) {
+          hours[i] = 0;
+        }
+  
+        // 데이터베이스 결과 처리
+        results.forEach(row => {
+          hours[row.warning_hour] = row.warning_count;
+        });
+  
+        // 결과를 배열로 변환
+        let finalResults = [];
+        for (let [hour, count] of Object.entries(hours)) {
+          finalResults.push({ warning_hour: hour, warning_count: count });
+        }
+  
+        if (finalResults.length === 0) {
           res.status(404).send('No warnings found for this user on the specified date');
         } else {
-          res.status(200).json(results);
+          res.status(200).json(finalResults);
         }
       }
     });

@@ -110,7 +110,7 @@
                 green: 'rgb(75, 192, 192)'
             },
             months: ({count}) => {
-                const months = ['1시', '2시', '3시', '4시', '5시', '6시', '7시', '8시', '9시', '10시', '11시', '12시', '13시', '14시', '15시', '16시', '17시', '18시', '19시', '20시', '21시', '22시', '23시', '0시'];
+                const months = [ '0시','1시', '2시', '3시', '4시', '5시', '6시', '7시', '8시', '9시', '10시', '11시', '12시', '13시', '14시', '15시', '16시', '17시', '18시', '19시', '20시', '21시', '22시', '23시'];
                 return months.slice(0, count);
             },
             labtop: (dataGet) => {
@@ -190,16 +190,16 @@
     
         function updateChart1WithData(dataGet) {
             myChart1.data.labels = Utils.months({ count: 24 });
-            myChart1.data.datasets[0].data = Utils.labtop(dataGet);
-            myChart1.data.datasets[0].backgroundColor = Utils.CHART_COLORS.red;
+            myChart1.data.datasets[1].data = Utils.labtop(dataGet);
+            myChart1.data.datasets[1].backgroundColor = Utils.CHART_COLORS.blue;
             myChart1.update();
         }
 
         function updateChart1WithPoseData(dataGet) {
             myChart1.data.labels = Utils.months({ count: 24 });
-            myChart1.data.datasets[1].data = Utils.pose(dataGet);
+            myChart1.data.datasets[0].data = Utils.pose(dataGet);
             console.log(dataGet);
-            myChart1.data.datasets[1].backgroundColor = Utils.CHART_COLORS.blue;
+            myChart1.data.datasets[0].backgroundColor = Utils.CHART_COLORS.red;
             myChart1.update();
         }
     
@@ -208,13 +208,14 @@
             type: 'bar',
             data: {
                 labels: Utils.months({count: 24}),
-                datasets: [{
-                    label: '사용 시간',
-                    backgroundColor: [],
-                    data: [] // initial empty data
-                },
+                datasets: [
                 {
                     label: '나쁜 자세 시간',
+                    backgroundColor: [],
+                    data: [] // initial empty data
+                },    
+                {
+                    label: '사용 시간',
                     backgroundColor: [],
                     data: [] // initial empty data
                 }
@@ -233,7 +234,7 @@
                         stacked: true,
                     },
                     y: {
-                        stacked: true
+                        stacked: false
                     }
                 }
             }
