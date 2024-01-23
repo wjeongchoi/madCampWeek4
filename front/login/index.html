@@ -210,7 +210,8 @@ function onLogin() {
 
         if (response.ok) {
             // 로그인 성공시, 사용자 아이디를 로컬 스토리지에 저장
-            localStorage.setItem('userId', id);            // 로그인 성공 후의 추가 동작
+            localStorage.setItem('userId', id);
+            window.location.href = '../chart/index.html';
         }
     })
     .catch(error => {
