@@ -3,6 +3,7 @@
 <head>
     <title>Settings Page</title>
     <meta charset="UTF-8">
+    <script src="../common.js"></script>
     <style>
         /* Custom styles based on the provided CSS */
         body {
@@ -270,7 +271,7 @@
             </button>
 
             <!-- 확인 버튼 -->
-            <button class="button-style" style="top: 73px;">
+            <button class="button-style button-confirm" style="top: 73px;">
                 <div class="text-style text-medium" style="text-align: center; color: #6E8977;">확인</div>
             </button>
 
@@ -316,24 +317,17 @@
     
         // Event listener for the confirm button
         document.querySelector('.button-confirm').addEventListener('click', function() {
-            // Collect the state of the settings
-            const screen = getToggleState('toggleButton1') ? 1 : 0;
-            const turtle = getToggleState('toggleButton2');
-            const close = getToggleState('toggleButton3');
-            const tilted = getToggleState('toggleButton4');
-            const alert = parseInt(getDropdownValue().replace('option', ''), 10);
-    
-            // Define user_id (this should be dynamically set based on the logged-in user)
-            const user_id = localStorage.getItem("userId");
+        // Collect the state of the settings
+        const screen = getToggleState('toggleButton1') ? 1 : 0;
+        const turtle = getToggleState('toggleButton2');
+        const close = getToggleState('toggleButton3');
+        const tilted = getToggleState('toggleButton4');
+        const alert = parseInt(getDropdownValue().replace('option', ''), 10);
 
-            if (user_id) {
-            // userId가 존재하면, userId를 사용하는 로직을 여기에 추가
-            console.log("사용자 ID:", user_id);
-            } else {
-            // userId가 없는 경우, 에러 메시지를 출력
-            console.error("로그인된 사용자 ID를 찾을 수 없습니다.");
-            }
+        // Define user_id (this should be dynamically set based on the logged-in user)
+        const user_id = localStorage.getItem("userId");
 
+        if (user_id) {
             // Send the data to the server
             fetch('http://3.34.146.225:3000/setting', {
                 method: 'POST',
@@ -349,12 +343,15 @@
                 return response.text();
             })
             .then(result => {
-                console.log('Settings updated successfully!'); // Notify the user of success
+                showToast("설정이 저장되었습니다.", "green");
             })
             .catch(error => {
-                console.log('Error updating settings: ' + error); // Notify the user of an error
+                showToast('Error updating settings: ' + error, "red");
             });
-        });
+        } else {
+            showToast("로그인된 사용자 ID를 찾을 수 없습니다.", "red");
+        }
+    });
 
         function redirectToPoseSave() {
             window.location.href = '../poseSave/index.html';
@@ -368,43 +365,46 @@
         }
 
         function promptForDeletion() {
-            // 사용자에게 비밀번호를 입력받음
-            const password = prompt("계정을 삭제하시려면 비밀번호를 입력하세요.");
-            if (password) {
-                deleteUser(password);
-            }
+        // 사용자에게 비밀번호를 입력받음
+        const password = prompt("계정을 삭제하시려면 비밀번호를 입력하세요.");
+        if (password) {
+            deleteUser(password);
+        }
+    }
+
+    function deleteUser(password) {
+        const id = localStorage.getItem("userId");
+
+        if (!id) {
+            showToast("로그인된 사용자 ID를 찾을 수 없습니다.", "red");
+            return;
         }
 
-        function deleteUser(password) {
-            const id = localStorage.getItem("userId");
-
-            if (!id) {
-                alert("로그인된 사용자 ID를 찾을 수 없습니다.");
-                return;
-            }
-
-            // API 요청 보내기
-            fetch('http://3.34.146.225:3000/users/delete', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ id, password })
-            })
-            .then(response => {
-                if (response.ok) {
-                    alert("계정이 삭제되었습니다.");
-                    // 로그아웃 처리
-                    localStorage.removeItem('userId');
+        // API 요청 보내기
+        fetch('http://3.34.146.225:3000/users/delete', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ id, password })
+        })
+        .then(response => {
+            if (response.ok) {
+                showToast("계정이 삭제되었습니다.", "green");
+                // 로그아웃 처리
+                localStorage.removeItem('userId');
+                setTimeout(function () {
                     window.location.href = '../login/index.html';
-                } else {
-                    alert("비밀번호가 일치하지 않거나 계정을 찾을 수 없습니다.");
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-        }
+            }, 3000);
+            } else {
+                showToast("비밀번호가 일치하지 않거나 계정을 찾을 수 없습니다.", "red");
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showToast("오류가 발생했습니다.", "red");
+        });
+    }
     </script>
     
 </body>
