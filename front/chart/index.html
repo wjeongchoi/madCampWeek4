@@ -110,6 +110,9 @@
     </style>
   </head>
   <body>
+    <div class="date-picker">
+      <input type="date" id="dateInput" onchange="loadDataForSelectedDate()" />
+    </div>
     <div class="chart-container" id="chartContainer1">
       <div class="chart-title" id="title1">노트북 사용 시간</div>
       <canvas id="myChart1" width="737" height="566"></canvas>
@@ -130,8 +133,6 @@
 
     </div>
     </div>
-    
-    
     
     <script>
       // Utils for chart 1
@@ -187,8 +188,8 @@
       };
 
       // Fetch usage data from the API for chart 1
-      function fetchUsageData() {
-        const date = "2024-01-22";
+      function fetchUsageData(selectdate) {
+        const date = selectdate;
         const userId = localStorage.getItem("userId");
 
         if (userId) {
@@ -222,8 +223,8 @@
       }
 
       // Fetch usage data from the API for chart 1
-      function fetchPoseData() {
-        const date = "2024-01-23";
+      function fetchPoseData(selectdate) {
+        const date = selectdate;
         const userId = localStorage.getItem("userId");
 
         if (userId) {
@@ -336,8 +337,8 @@
       };
 
       // Fetch warning data from the API for chart 2
-      function fetchWarningData() {
-        const date = "2024-01-23";
+      function fetchWarningData(selectdate) {
+        const date = selectdate;
         const userId = localStorage.getItem("userId");
 
         if (userId) {
@@ -402,22 +403,36 @@
           },
         },
       };
-
       document.addEventListener("DOMContentLoaded", () => {
         const userId = localStorage.getItem("userId");
         if (!userId) {
-          showToast("먼저 로그인해주세요", "red"); // alert 대신 showToast 함수 사용
-          setTimeout(function () {
-            window.location.href = "../login";
-          }, 1000); // 3초 후에 로그인 페이지로 리디렉션
+          showToast("먼저 로그인해주세요", "red"); // 로그인 안내 메시지
+          setTimeout(function() {
+            window.location.href = "../login"; // 1초 후에 로그인 페이지로 이동
+          }, 1000);
           return; // userId가 없으면 나머지 스크립트 실행 중단
         }
 
-        // userId가 있을 때 차트 데이터 가져오기
-        fetchUsageData();
-        fetchPoseData();
-        fetchWarningData();
+        // 현재 날짜를 기본값으로 설정하고 해당 날짜에 대한 데이터 로드
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('dateInput').value = today;
+        loadDataForSelectedDate(); // 오늘 날짜에 대한 데이터 로드
       });
+
+      // 선택된 날짜에 대한 데이터 로드 함수
+      function loadDataForSelectedDate() {
+        const selectedDate = document.getElementById('dateInput').value;
+        const userId = localStorage.getItem("userId");
+
+        if (selectedDate && userId) {
+          fetchUsageData(selectedDate, userId);
+          fetchPoseData(selectedDate, userId);
+          fetchWarningData(selectedDate, userId);
+        } else {
+          console.error('선택된 날짜가 유효하지 않거나 로그인된 사용자 ID를 찾을 수 없습니다.');
+        }
+      }
+
 
       // Create the charts
       const myChart1 = new Chart(document.getElementById("myChart1"), config1);
