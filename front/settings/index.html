@@ -387,7 +387,13 @@
 
                     // 3초 후 이전 페이지로 이동
                     setTimeout(function() {
-                        if (document.referrer.includes('login') || document.referrer.includes('poseSave')) {
+                        if (document.referrer.includes('webcam')) {
+                            // 이전 페이지가 webcam이었다면 login 페이지로 리디렉션
+                            window.location.href = '../webcam';
+                            setTimeout(function() {
+                                window.location.reload();
+                            }, 100);
+                        } else if (document.referrer.includes('login') || document.referrer.includes('poseSave')) {
                             // login 또는 poseSave 페이지에서 왔다면 chart 페이지로 리디렉션
                             window.location.href = '../chart';
                         } else {
@@ -395,6 +401,7 @@
                             window.history.back();
                         }
                     }, 1000);
+
 
                 })
                 .catch(error => {
