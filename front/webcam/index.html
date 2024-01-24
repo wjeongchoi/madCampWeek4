@@ -150,6 +150,7 @@
             onmouseout="this.style.background='#6E8977'"
           >
             <img
+              id="pauseButton"
               style="
                 width: 30px;
                 height: 30px;
@@ -161,6 +162,7 @@
             />
           </button>
           <button
+            id="playButton"
             style="
               width: 53px;
               height: 52px;
@@ -692,6 +694,83 @@
         height: 480,
       });
       camera.start();
+
+      // 사용 시작 시간과 종료 시간을 저장할 전역 변수
+      let startTime = null;
+      let endTime = null;
+
+      // Play 버튼 클릭 이벤트
+      document
+        .getElementById("playButton")
+        .addEventListener("click", function () {
+          startTime = new Date(); // 현재 시간을 시작 시간으로 설정
+          console.log(startTime);
+        });
+
+      // Pause 버튼 클릭 이벤트
+      document
+        .getElementById("pauseButton")
+        .addEventListener("click", function () {
+          if (startTime) {
+            endTime = new Date(); // 현재 시간을 종료 시간으로 설정
+            console.log(endTime);
+            saveProgramUsage(); // 사용 시간 데이터 저장 함수 호출
+          }
+        });
+
+      // 날짜와 시간을 "YYYY-MM-DD HH:mm:ss" 형식으로 변환하는 함수
+      function formatDateTime(date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+        const hours = String(date.getHours()).padStart(2, "0");
+        const minutes = String(date.getMinutes()).padStart(2, "0");
+        const seconds = String(date.getSeconds()).padStart(2, "0");
+
+        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+      }
+
+      // 사용 시간 데이터 저장 함수
+      function saveProgramUsage() {
+        const userId = localStorage.getItem("userId"); // 사용자 ID를 localStorage에서 가져옴
+
+        // 필요한 데이터가 모두 있는지 확인
+        if (!userId || !startTime || !endTime) {
+          showToast("필요한 데이터가 누락되었습니다.", "red");
+          return;
+        }
+
+        // endTime이 startTime보다 이전인지 확인
+        if (endTime < startTime) {
+          showToast("사용 시작 시간이 잘못 설정되었습니다.", "red");
+          return;
+        }
+
+        // 사용 시간 데이터를 서버로 전송
+        fetch("http://3.34.146.225:3000/usage/time", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            user_id: userId,
+            start_time: formatDateTime(startTime),
+            end_time: formatDateTime(endTime),
+          }),
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(`Error: ${response.status}`);
+            }
+            return response.text();
+          })
+          .then((result) => {
+            showToast("사용 데이터가 성공적으로 저장되었습니다.", "green");
+          })
+          .catch((error) => {
+            showToast("사용 데이터 저장 중 오류가 발생했습니다.", "red");
+          });
+      }
     </script>
   </body>
 </html>
