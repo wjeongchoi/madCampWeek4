@@ -138,7 +138,6 @@
               src="./setting.png"
             />
           </button>
-
           <div style="width: 131px; height: 52px; left: 215px; top: 0px; position: absolute">
             <button class="button" style="width: 131px; height: 52px; border-radius: 10px; border: 4px #6E8977 solid; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); font-size: 22px; font-family: Inter; font-weight: 700; color: #5E7666; text-align: center; background: transparent; cursor: pointer;">
                 사용 종료
@@ -151,7 +150,6 @@
                 사용 시작
             </button>
         </div>
-
           <button
             id="statsButton"
             style="
@@ -182,6 +180,21 @@
           랜드마크 데이터 저장
         </button>
       </div>
+    </div>
+    <div
+      id="toast"
+      style="
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        left: 20px;
+        background: rgba(0, 0, 0, 0.7);
+        color: white;
+        padding: 10px;
+        border-radius: 5px;
+      "
+    >
+      화면과의 거리가 너무 가깝습니다!
     </div>
 
     <div id="show"></div>
@@ -227,27 +240,11 @@
             })
             .then((data) => {
               // 여기에서 data를 처리하거나 전역 변수에 저장
-              landmark0 = { x: data.nose[0], y: data.nose[1], z: data.nose[2] };
-              landmark7 = {
-                x: data.leftEar[0],
-                y: data.leftEar[1],
-                z: data.leftEar[2],
-              };
-              landmark8 = {
-                x: data.rightEar[0],
-                y: data.rightEar[1],
-                z: data.rightEar[2],
-              };
-              landmark11 = {
-                x: data.leftShoulder[0],
-                y: data.leftShoulder[1],
-                z: data.leftShoulder[2],
-              };
-              landmark12 = {
-                x: data.rightShoulder[0],
-                y: data.rightShoulder[1],
-                z: data.rightShoulder[2],
-              };
+              landmark0 = {x: data.nose[0], y: data.nose[1], z: data.nose[2]};
+              landmark7 = {x: data.leftEar[0], y: data.leftEar[1], z: data.leftEar[2]};
+              landmark8 = {x: data.rightEar[0], y: data.rightEar[1], z: data.rightEar[2]};
+              landmark11 = {x: data.leftShoulder[0], y: data.leftShoulder[1], z: data.leftShoulder[2]};
+              landmark12 = {x: data.rightShoulder[0], y: data.rightShoulder[1], z: data.rightShoulder[2]};
 
               console.log("User data:", data);
             })
@@ -258,11 +255,7 @@
       }
 
       // 페이지 로드 시 사용자 데이터 로드 함수 호출
-      window.onload = function () {
-        requestNotificationPermission();
-        loadUserData(); // 기존의 사용자 데이터 로드 함수도 호출
-        loadUserSettings();
-      };
+      window.onload = loadUserData;
 
       navigator.mediaDevices
         .getUserMedia({ video: true })
@@ -280,10 +273,14 @@
 
       // 결과 처리 함수
       // 이미지 파일 경로
+      //const imageUrl = "https://picsum.photos/20/30"; // 이미지 파일의 경로를 설정해야 합니다.
       const imageUrl = "head.png";
 
       // 이전에 추가된 이미지 요소들을 저장할 배열
       const previousImages = [];
+
+      // 랜드마크에 이미지 띄우는 함수
+      // 랜드마크에 이미지 띄우는 함수
 
       const images = {}; // 각 랜드마크에 대한 이미지 객체 저장
       //토스트 메시지 띄우기
@@ -334,6 +331,7 @@
           x: (landmark1.x + landmark2.x) / 2,
           y: (landmark1.y + landmark2.y) / 2,
           z: (landmark1.z + landmark2.z) / 2,
+          //y: rect.top + landmark1.y + landmark2.y/1.5
         };
       }
 
@@ -442,11 +440,7 @@
                 if (startNearTime === null) {
                   startNearTime = new Date();
                 } else if (new Date() - startNearTime >= 1000) {
-                  sendNotification(
-                    "경고",
-                    "화면과의 거리가 너무 가깝습니다!",
-                    "near"
-                  );
+                  showToast("화면과의 거리가 너무 가깝습니다!");
                   //startNearTime = null;
                 }
               } else {
@@ -455,11 +449,7 @@
             } else {
               if (results.poseLandmarks[0].z < -1.8) {
                 // someThreshold는 원하는 z값 임계치
-                sendNotification(
-                  "경고",
-                  "화면과의 거리가 너무 가깝습니다!",
-                  "near"
-                );
+                showToast("화면과의 거리가 너무 가깝습니다!");
               }
             }
           }
@@ -484,11 +474,7 @@
               if (startTiltLeftTime === null) {
                 startTiltLeftTime = new Date();
               } else if (new Date() - startTiltLeftTime >= 1000) {
-                sendNotification(
-                  "경고",
-                  "왼쪽으로 기울어졌습니다!",
-                  "tiltLeft"
-                );
+                showToast("왼쪽으로 기울어졌습니다!");
               }
             } else {
               startTiltLeftTime = null;
@@ -498,25 +484,17 @@
               if (startTiltRightTime === null) {
                 startTiltRightTime = new Date();
               } else if (new Date() - startTiltRightTime >= 1000) {
-                sendNotification(
-                  "경고",
-                  "오른쪽으로 기울어졌습니다!",
-                  "tiltRight"
-                );
+                showToast("오른쪽으로 기울어졌습니다!");
               }
             } else {
               startTiltRightTime = null;
             }
           } else {
             if (angle > 25) {
-              sendNotification("경고", "왼쪽으로 기울어졌습니다!", "tiltLeft");
+              showToast("왼쪽으로 기울어졌습니다!");
             }
             if (angle < 5) {
-              sendNotification(
-                "경고",
-                "오른쪽으로 기울어졌습니다!",
-                "tiltRight"
-              );
+              showToast("오른쪽으로 기울어졌습니다!");
             }
           }
 
@@ -526,6 +504,26 @@
           );
           placeImageAtLandmark(middleShoulder, "body.png", 12); // 몸 랜드마크
 
+          //거북목 테스트1-코와 어깨 중간점 간의 길이
+          /*const length = calculateDistance(results.poseLandmarks[7], middleShoulder);
+        if(landmark0) {
+          const poseLength = calculateDistance(landmark7, middleShoulder);
+          if(length-poseLength > 0.04) {
+            placeImageAtLandmark(results.poseLandmarks[7], "tutle.png", 0); // 머리 랜드마크
+          } else {
+            placeImageAtLandmark(results.poseLandmarks[7], "head3.png", 0); // 머리 랜드마크
+          }
+          //console.log("length: "+length);
+          //console.log("saved poseLength: "+poseLength);
+
+        } else {
+          if(length < 0.46) {
+            placeImageAtLandmark(results.poseLandmarks[7], "head3.png", 0); // 머리 랜드마크
+          } else {
+            placeImageAtLandmark(results.poseLandmarks[7], "tutle.png", 0); // 머리 랜드마크
+          }
+        }*/
+
           //거북목 테스트2-기울기 각도
           if (landmark0) {
             const angleMiddleShoulder = calculateMiddlePoint(
@@ -533,8 +531,8 @@
               landmark12
             );
             const zangleAngle = calculateZAngle(landmark7, angleMiddleShoulder);
-            //console.log("zangle: " + zangle);
-            //console.log("saved angle: " + zangleAngle);
+            console.log("zangle: " + zangle);
+            console.log("saved angle: " + zangleAngle);
             if (zangleAngle - zangle > 3) {
               if (startTurtleNeckTime === null) {
                 startTurtleNeckTime = new Date(); // 조건 시작 시간 기록
@@ -554,6 +552,7 @@
             }
           }
 
+          //placeImageAtLandmark(results.poseLandmarks[0], "https://picsum.photos/20/30", 0);11
           // 양쪽 어깨의 중간 지점 계산 및 빨간 점 그리기
 
           drawLandmark(canvasCtx, middleShoulder);
@@ -653,195 +652,6 @@
         height: 480,
       });
       camera.start();
-
-      // 사용 시작 시간과 종료 시간을 저장할 전역 변수
-      let startTime = null;
-      let endTime = null;
-
-      // Play 버튼 클릭 이벤트
-      document
-        .getElementById("playButton")
-        .addEventListener("click", function () {
-          startTime = new Date(); // 현재 시간을 시작 시간으로 설정
-          console.log(startTime);
-        });
-
-      // Pause 버튼 클릭 이벤트
-      document
-        .getElementById("pauseButton")
-        .addEventListener("click", function () {
-          if (startTime) {
-            endTime = new Date(); // 현재 시간을 종료 시간으로 설정
-            console.log(endTime);
-            saveProgramUsage(); // 사용 시간 데이터 저장 함수 호출
-          }
-        });
-
-      function requestNotificationPermission() {
-        Notification.requestPermission().then(function (permission) {
-          if (permission === "granted") {
-            console.log("Notification permission granted.");
-          } else {
-            console.log("Notification permission denied.");
-          }
-        });
-      }
-
-      let userSettings = {};
-
-      // 서버에서 사용자 설정을 가져오는 함수
-      function loadUserSettings() {
-        const userId = localStorage.getItem("userId"); // localStorage에서 userId 가져오기
-        if (!userId) {
-          console.error("No userId found in localStorage.");
-          return;
-        }
-
-        fetch(`http://3.34.146.225:3000/setting?user_id=${userId}`) // userId를 사용하여 API 요청
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error(`Error: ${response.status}`);
-            }
-            return response.json();
-          })
-          .then((data) => {
-            userSettings = data;
-            console.log("User settings loaded:", data); // 디버깅을 위한 로그
-          })
-          .catch((error) => {
-            console.error("Error loading user settings:", error);
-          });
-      }
-
-      let lastNearWarningTime = null;
-      let lastTiltLeftWarningTime = null;
-      let lastTiltRightWarningTime = null;
-      let lastTurtleNeckWarningTime = null;
-
-      // 공통 오디오 파일 URL
-      const audioUrl = "notificationSound.mp3"; // 경고 소리 파일 경로
-
-      function sendNotification(title, body, apiWarningType) {
-        const now = new Date();
-        let warningType = "";
-        if (apiWarningType === "near") {
-          warningType = "close";
-        } else if (
-          apiWarningType === "tiltLeft" ||
-          apiWarningType === "tiltRight"
-        ) {
-          warningType = "tilted";
-        } else if (apiWarningType === "turtleNeck") {
-          warningType = "turtle";
-        } else {
-          // 알 수 없는 키인 경우
-          console.error("Unknown API warning type: " + apiWarningType);
-          // 클라이언트에게 알 수 없는 경고 타입이라는 응답을 보냄
-          sendPushNotification("Unknown API warning type: " + apiWarningType);
-          return;
-        }
-        // 사용자 설정에 따라 경고를 보내거나 무시
-        if (userSettings[warningType] !== 1) {
-          return; // 이 경고 타입이 활성화되지 않았으면 함수 종료
-        }
-        let lastWarningTime;
-        switch (apiWarningType) {
-          case "near":
-            lastWarningTime = lastNearWarningTime;
-            break;
-          case "tiltLeft":
-            lastWarningTime = lastTiltLeftWarningTime;
-            break;
-          case "tiltRight":
-            lastWarningTime = lastTiltRightWarningTime;
-            break;
-          case "turtleNeck":
-            lastWarningTime = lastTurtleNeckWarningTime;
-            break;
-        }
-
-        if (!lastWarningTime || now - lastWarningTime >= 5000) {
-          // 5초 체크
-          if (Notification.permission === "granted") {
-            new Notification(title, { body: body });
-            console.log(body);
-
-            // 경고 소리 재생
-            var audio = new Audio(audioUrl);
-            audio.play();
-          }
-
-          // 마지막 경고 시간 업데이트
-          switch (apiWarningType) {
-            case "near":
-              lastNearWarningTime = now;
-              break;
-            case "tiltLeft":
-              lastTiltLeftWarningTime = now;
-              break;
-            case "tiltRight":
-              lastTiltRightWarningTime = now;
-              break;
-            case "turtleNeck":
-              lastTurtleNeckWarningTime = now;
-              break;
-          }
-        }
-      }
-
-      // 날짜와 시간을 "YYYY-MM-DD HH:mm:ss" 형식으로 변환하는 함수
-      function formatDateTime(date) {
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, "0");
-        const day = String(date.getDate()).padStart(2, "0");
-        const hours = String(date.getHours()).padStart(2, "0");
-        const minutes = String(date.getMinutes()).padStart(2, "0");
-        const seconds = String(date.getSeconds()).padStart(2, "0");
-
-        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-      }
-
-      // 사용 시간 데이터 저장 함수
-      function saveProgramUsage() {
-        const userId = localStorage.getItem("userId"); // 사용자 ID를 localStorage에서 가져옴
-
-        // 필요한 데이터가 모두 있는지 확인
-        if (!userId || !startTime || !endTime) {
-          showToast("필요한 데이터가 누락되었습니다.", "red");
-          return;
-        }
-
-        // endTime이 startTime보다 이전인지 확인
-        if (endTime < startTime) {
-          showToast("사용 시작 시간이 잘못 설정되었습니다.", "red");
-          return;
-        }
-
-        // 사용 시간 데이터를 서버로 전송
-        fetch("http://3.34.146.225:3000/usage/time", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            user_id: userId,
-            start_time: formatDateTime(startTime),
-            end_time: formatDateTime(endTime),
-          }),
-        })
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error(`Error: ${response.status}`);
-            }
-            return response.text();
-          })
-          .then((result) => {
-            showToast("사용 데이터가 성공적으로 저장되었습니다.", "green");
-          })
-          .catch((error) => {
-            showToast("사용 데이터 저장 중 오류가 발생했습니다.", "red");
-          });
-      }
     </script>
   </body>
 </html>
