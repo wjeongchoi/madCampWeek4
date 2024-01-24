@@ -584,6 +584,7 @@
               } else if (new Date() - startTurtleNeckTime >= 1000) {
                 // 3초 이상 지속되었는지 확인
                 placeImageAtLandmark(results.poseLandmarks[7], "tutle.png", 0); // 머리 랜드마크
+                sendNotification("경고", "거북목 자세가 감지되었습니다!", "turtleNeck");
               }
             } else {
               startTurtleNeckTime = null; // 조건이 더 이상 만족하지 않으면 시간 초기화
@@ -594,6 +595,7 @@
               placeImageAtLandmark(results.poseLandmarks[7], "head3.png", 0); // 머리 랜드마크
             } else {
               placeImageAtLandmark(results.poseLandmarks[7], "tutle.png", 0); // 머리 랜드마크
+              sendNotification("경고", "거북목 자세가 감지되었습니다!", "turtleNeck");
             }
           }
 
