@@ -206,7 +206,6 @@
 
           <video id="video" width="640" height="480" autoplay muted></video>
           <canvas id="canvas" width="640" height="480"></canvas>
-
         </div>
         <button
           id="saveLandmarksButton"
@@ -262,6 +261,29 @@
       });
 
       pose.onResults(onResults);
+
+      function loadUserData() {
+        const userId = localStorage.getItem("userId"); // userId를 localStorage에서 가져옴
+        if (userId) {
+          fetch(`http://3.34.146.225:3000/users/origin/${userId}`)
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error(`Error: ${response.status}`);
+              }
+              return response.json();
+            })
+            .then((data) => {
+              // 여기에서 data를 처리하거나 전역 변수에 저장
+              console.log("User data:", data);
+            })
+            .catch((error) => {
+              console.error("Fetching user data failed:", error);
+            });
+        }
+      }
+
+      // 페이지 로드 시 사용자 데이터 로드 함수 호출
+      window.onload = loadUserData;
 
       navigator.mediaDevices
         .getUserMedia({ video: true })
