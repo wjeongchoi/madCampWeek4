@@ -172,7 +172,7 @@
               showToast(`회원가입 완료. 로그인해주세요`); // 성공 메시지는 녹색 배경으로 표시
               setTimeout(function () {
                 window.location.href = "../login";
-              }, 3000);
+              }, 1000);
             })
             .catch((error) => {
               showToast("회원가입 중 오류가 발생했습니다.", "red"); // 오류 메시지는 빨간색 배경으로 표시
