@@ -275,6 +275,12 @@
             })
             .then((data) => {
               // 여기에서 data를 처리하거나 전역 변수에 저장
+              landmark0 = {x: data.nose[0], y: data.nose[1], z: data.nose[2]};
+              landmark7 = {x: data.leftEar[0], y: data.leftEar[1], z: data.leftEar[2]};
+              landmark8 = {x: data.rightEar[0], y: data.rightEar[1], z: data.rightEar[2]};
+              landmark11 = {x: data.leftShoulder[0], y: data.leftShoulder[1], z: data.leftShoulder[2]};
+              landmark12 = {x: data.rightShoulder[0], y: data.rightShoulder[1], z: data.rightShoulder[2]};
+
               console.log("User data:", data);
             })
             .catch((error) => {
