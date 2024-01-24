@@ -184,13 +184,10 @@
               src="./play.png"
             />
           </button>
-
-          <video id="video" width="640" height="480" autoplay muted></video>
-          <canvas id="canvas" width="640" height="480"></canvas>
           <button
+            id="statsButton"
             style="
               left: 530px;
-              top: 570px;
               width: 120px;
               position: absolute;
               text-align: center;
@@ -206,6 +203,10 @@
           >
             통계 보기
           </button>
+
+          <video id="video" width="640" height="480" autoplay muted></video>
+          <canvas id="canvas" width="640" height="480"></canvas>
+
         </div>
         <button
           id="saveLandmarksButton"
@@ -437,6 +438,11 @@
         .getElementById("settingsButton")
         .addEventListener("click", function () {
           window.location.href = "../settings";
+        });
+      document
+        .getElementById("statsButton")
+        .addEventListener("click", function () {
+          window.location.href = "../chart";
         });
 
       // 결과 처리 함수
