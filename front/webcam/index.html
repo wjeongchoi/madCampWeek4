@@ -296,6 +296,7 @@
       window.onload = function () {
         requestNotificationPermission();
         loadUserData(); // 기존의 사용자 데이터 로드 함수도 호출
+        loadUserSettings();
       };
 
       navigator.mediaDevices
@@ -476,7 +477,11 @@
                 if (startNearTime === null) {
                   startNearTime = new Date();
                 } else if (new Date() - startNearTime >= 1000) {
-                  sendNotification("경고", "화면과의 거리가 너무 가깝습니다!", "near");
+                  sendNotification(
+                    "경고",
+                    "화면과의 거리가 너무 가깝습니다!",
+                    "near"
+                  );
                   //startNearTime = null;
                 }
               } else {
@@ -485,7 +490,11 @@
             } else {
               if (results.poseLandmarks[0].z < -1.8) {
                 // someThreshold는 원하는 z값 임계치
-                sendNotification("경고", "화면과의 거리가 너무 가깝습니다!", "near");
+                sendNotification(
+                  "경고",
+                  "화면과의 거리가 너무 가깝습니다!",
+                  "near"
+                );
               }
             }
           }
@@ -510,7 +519,11 @@
               if (startTiltLeftTime === null) {
                 startTiltLeftTime = new Date();
               } else if (new Date() - startTiltLeftTime >= 1000) {
-                sendNotification("경고", "왼쪽으로 기울어졌습니다!", "tiltLeft");
+                sendNotification(
+                  "경고",
+                  "왼쪽으로 기울어졌습니다!",
+                  "tiltLeft"
+                );
               }
             } else {
               startTiltLeftTime = null;
@@ -520,7 +533,11 @@
               if (startTiltRightTime === null) {
                 startTiltRightTime = new Date();
               } else if (new Date() - startTiltRightTime >= 1000) {
-                sendNotification("경고", "오른쪽으로 기울어졌습니다!", "tiltRight");
+                sendNotification(
+                  "경고",
+                  "오른쪽으로 기울어졌습니다!",
+                  "tiltRight"
+                );
               }
             } else {
               startTiltRightTime = null;
@@ -530,7 +547,11 @@
               sendNotification("경고", "왼쪽으로 기울어졌습니다!", "tiltLeft");
             }
             if (angle < 5) {
-              sendNotification("경고", "오른쪽으로 기울어졌습니다!", "tiltRight");
+              sendNotification(
+                "경고",
+                "오른쪽으로 기울어졌습니다!",
+                "tiltRight"
+              );
             }
           }
 
@@ -701,15 +722,65 @@
         });
       }
 
+      let userSettings = {};
+
+      // 서버에서 사용자 설정을 가져오는 함수
+      function loadUserSettings() {
+        const userId = localStorage.getItem("userId"); // localStorage에서 userId 가져오기
+        if (!userId) {
+          console.error("No userId found in localStorage.");
+          return;
+        }
+
+        fetch(`http://3.34.146.225:3000/setting?user_id=${userId}`) // userId를 사용하여 API 요청
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(`Error: ${response.status}`);
+            }
+            return response.json();
+          })
+          .then((data) => {
+            userSettings = data;
+            console.log("User settings loaded:", data); // 디버깅을 위한 로그
+          })
+          .catch((error) => {
+            console.error("Error loading user settings:", error);
+          });
+      }
+
       let lastNearWarningTime = null;
       let lastTiltLeftWarningTime = null;
       let lastTiltRightWarningTime = null;
       let lastTurtleNeckWarningTime = null;
 
-      function sendNotification(title, body, warningType) {
+      // 공통 오디오 파일 URL
+      const audioUrl = "notificationSound.mp3"; // 경고 소리 파일 경로
+
+      function sendNotification(title, body, apiWarningType) {
         const now = new Date();
+        let warningType = "";
+        if (apiWarningType === "near") {
+          warningType = "close";
+        } else if (
+          apiWarningType === "tiltLeft" ||
+          apiWarningType === "tiltRight"
+        ) {
+          warningType = "tilted";
+        } else if (apiWarningType === "turtleNeck") {
+          warningType = "turtle";
+        } else {
+          // 알 수 없는 키인 경우
+          console.error("Unknown API warning type: " + apiWarningType);
+          // 클라이언트에게 알 수 없는 경고 타입이라는 응답을 보냄
+          sendPushNotification("Unknown API warning type: " + apiWarningType);
+          return;
+        }
+        // 사용자 설정에 따라 경고를 보내거나 무시
+        if (userSettings[warningType] !== 1) {
+          return; // 이 경고 타입이 활성화되지 않았으면 함수 종료
+        }
         let lastWarningTime;
-        switch (warningType) {
+        switch (apiWarningType) {
           case "near":
             lastWarningTime = lastNearWarningTime;
             break;
@@ -725,14 +796,18 @@
         }
 
         if (!lastWarningTime || now - lastWarningTime >= 5000) {
-          // 30초 체크
+          // 5초 체크
           if (Notification.permission === "granted") {
             new Notification(title, { body: body });
             console.log(body);
+
+            // 경고 소리 재생
+            var audio = new Audio(audioUrl);
+            audio.play();
           }
 
           // 마지막 경고 시간 업데이트
-          switch (warningType) {
+          switch (apiWarningType) {
             case "near":
               lastNearWarningTime = now;
               break;
