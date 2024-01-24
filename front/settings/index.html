@@ -387,7 +387,13 @@
 
                     // 3초 후 이전 페이지로 이동
                     setTimeout(function() {
-                        window.history.back();
+                        if (document.referrer.includes('login') || document.referrer.includes('poseSave')) {
+                            // login 또는 poseSave 페이지에서 왔다면 chart 페이지로 리디렉션
+                            window.location.href = '../chart';
+                        } else {
+                            // 그렇지 않다면 기존 로직(이전 페이지로 돌아가기) 실행
+                            window.history.back();
+                        }
                     }, 1000);
 
                 })
