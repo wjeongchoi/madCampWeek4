@@ -262,11 +262,27 @@
             })
             .then((data) => {
               // 여기에서 data를 처리하거나 전역 변수에 저장
-              landmark0 = {x: data.nose[0], y: data.nose[1], z: data.nose[2]};
-              landmark7 = {x: data.leftEar[0], y: data.leftEar[1], z: data.leftEar[2]};
-              landmark8 = {x: data.rightEar[0], y: data.rightEar[1], z: data.rightEar[2]};
-              landmark11 = {x: data.leftShoulder[0], y: data.leftShoulder[1], z: data.leftShoulder[2]};
-              landmark12 = {x: data.rightShoulder[0], y: data.rightShoulder[1], z: data.rightShoulder[2]};
+              landmark0 = { x: data.nose[0], y: data.nose[1], z: data.nose[2] };
+              landmark7 = {
+                x: data.leftEar[0],
+                y: data.leftEar[1],
+                z: data.leftEar[2],
+              };
+              landmark8 = {
+                x: data.rightEar[0],
+                y: data.rightEar[1],
+                z: data.rightEar[2],
+              };
+              landmark11 = {
+                x: data.leftShoulder[0],
+                y: data.leftShoulder[1],
+                z: data.leftShoulder[2],
+              };
+              landmark12 = {
+                x: data.rightShoulder[0],
+                y: data.rightShoulder[1],
+                z: data.rightShoulder[2],
+              };
 
               console.log("User data:", data);
             })
@@ -460,7 +476,7 @@
                 if (startNearTime === null) {
                   startNearTime = new Date();
                 } else if (new Date() - startNearTime >= 1000) {
-                  sendNotification("경고", "화면과의 거리가 너무 가깝습니다!");
+                  sendNotification("경고", "화면과의 거리가 너무 가깝습니다!", "near");
                   //startNearTime = null;
                 }
               } else {
@@ -469,7 +485,7 @@
             } else {
               if (results.poseLandmarks[0].z < -1.8) {
                 // someThreshold는 원하는 z값 임계치
-                sendNotification("경고", "화면과의 거리가 너무 가깝습니다!");
+                sendNotification("경고", "화면과의 거리가 너무 가깝습니다!", "near");
               }
             }
           }
@@ -494,7 +510,7 @@
               if (startTiltLeftTime === null) {
                 startTiltLeftTime = new Date();
               } else if (new Date() - startTiltLeftTime >= 1000) {
-                sendNotification("경고", "왼쪽으로 기울어졌습니다!");
+                sendNotification("경고", "왼쪽으로 기울어졌습니다!", "tiltLeft");
               }
             } else {
               startTiltLeftTime = null;
@@ -504,17 +520,17 @@
               if (startTiltRightTime === null) {
                 startTiltRightTime = new Date();
               } else if (new Date() - startTiltRightTime >= 1000) {
-                sendNotification("경고", "오른쪽으로 기울어졌습니다!");
+                sendNotification("경고", "오른쪽으로 기울어졌습니다!", "tiltRight");
               }
             } else {
               startTiltRightTime = null;
             }
           } else {
             if (angle > 25) {
-              sendNotification("경고", "왼쪽으로 기울어졌습니다!");
+              sendNotification("경고", "왼쪽으로 기울어졌습니다!", "tiltLeft");
             }
             if (angle < 5) {
-              sendNotification("경고", "오른쪽으로 기울어졌습니다!");
+              sendNotification("경고", "오른쪽으로 기울어졌습니다!", "tiltRight");
             }
           }
 
@@ -684,9 +700,52 @@
           }
         });
       }
-      function sendNotification(title, body) {
-        if (Notification.permission === "granted") {
-          new Notification(title, { body: body });
+
+      let lastNearWarningTime = null;
+      let lastTiltLeftWarningTime = null;
+      let lastTiltRightWarningTime = null;
+      let lastTurtleNeckWarningTime = null;
+
+      function sendNotification(title, body, warningType) {
+        const now = new Date();
+        let lastWarningTime;
+        switch (warningType) {
+          case "near":
+            lastWarningTime = lastNearWarningTime;
+            break;
+          case "tiltLeft":
+            lastWarningTime = lastTiltLeftWarningTime;
+            break;
+          case "tiltRight":
+            lastWarningTime = lastTiltRightWarningTime;
+            break;
+          case "turtleNeck":
+            lastWarningTime = lastTurtleNeckWarningTime;
+            break;
+        }
+
+        if (!lastWarningTime || now - lastWarningTime >= 5000) {
+          // 30초 체크
+          if (Notification.permission === "granted") {
+            new Notification(title, { body: body });
+            console.log(body);
+          }
+
+          // 마지막 경고 시간 업데이트
+          switch (warningType) {
+            case "near":
+              lastNearWarningTime = now;
+              break;
+            case "tiltLeft":
+              lastTiltLeftWarningTime = now;
+              break;
+            case "tiltRight":
+              lastTiltRightWarningTime = now;
+              break;
+            case "turtleNeck":
+              lastTurtleNeckWarningTime = now;
+              break;
+          }
         }
       }
 
