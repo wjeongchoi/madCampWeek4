@@ -46,11 +46,19 @@
 
       #video {
         z-index: 1;
+        transform: translate(0%, 2%);
       }
 
       #canvas {
         z-index: 2;
         background: transparent;
+        transform: translate(0%, 2%);
+      }
+
+      #line {
+        z-index: 2;
+        background: transparent;
+        transform: translateX(40%);
       }
 
       #saveLandmarksButton {
@@ -90,6 +98,16 @@
         max-width: 200px;
         overflow: auto;
       }
+      #rightPanel {
+        position: fixed;
+        right: 10%;
+        top: 22%;
+        width: 500px; /* 너비 설정 */
+        height: 600px; /* 전체 높이 */
+        background-color: #fcfdf4; /* 기존 배경색보다 연한 색 */
+        border-radius: 10px 10px 10px 10px; /* 오른쪽 모서리만 둥글게 */
+        box-shadow: inset 5px 0px 10px rgba(0, 0, 0, 0.1); /* 안쪽 그림자 */
+      }
       @font-face {
         font-family: "Escore Dream";
         src: url("../../SCDream6.otf") format("truetype");
@@ -99,14 +117,15 @@
     </style>
   </head>
   <body>
+    <div id="rightPanel"></div>
     <div class="container">
       <div style="width: 60%; height: 70%; position: relative">
         <div
           style="
             width: 201px;
             height: 52px;
-            left: 20%;
-            top: 0px;
+            left: -10%;
+            top: 10%;
             position: absolute;
           "
         >
@@ -115,6 +134,7 @@
             style="
               width: 53px;
               height: 52px;
+              left: 587px;
               background: #6e8977;
               box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
               border-radius: 10px;
@@ -139,7 +159,7 @@
             style="
               width: 131px;
               height: 52px;
-              left: 215px;
+              left: 147px;
               top: 0px;
               position: absolute;
             "
@@ -166,15 +186,7 @@
           </div>
 
           <!-- 사용 시작 버튼 -->
-          <div
-            style="
-              width: 131px;
-              height: 52px;
-              left: 68px;
-              top: 0px;
-              position: absolute;
-            "
-          >
+          <div style="width: 131px; height: 52px; top: 0px; position: absolute">
             <button
               id="playButton"
               style="
@@ -195,28 +207,40 @@
               사용 시작
             </button>
           </div>
-          <button
-            id="statsButton"
+          <div
             style="
-              left: 530px;
-              width: 120px;
+              width: 131px;
+              height: 52px;
+              left: 294px;
+              top: 0px;
               position: absolute;
-              text-align: center;
-              background: transparent;
-              border: none;
-              color: #5e7666;
-              font-size: 24px;
-              font-family: Inter;
-              font-weight: 700;
-              font-family: 'Escore Dream', sans-serif;
-              word-wrap: break-word;
             "
           >
-            통계 보기
-          </button>
+            <button
+              id="statsButton"
+              class="button"
+              style="
+                width: 131px;
+                height: 52px;
+                border-radius: 10px;
+                border: 4px #6e8977 solid;
+                box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+                font-size: 22px;
+                font-family: Inter;
+                font-weight: 700;
+                color: #5e7666;
+                text-align: center;
+                background: transparent;
+                cursor: pointer;
+              "
+            >
+              통계 보기
+            </button>
+          </div>
 
           <video id="video" width="640" height="480" autoplay muted></video>
           <canvas id="canvas" width="640" height="480"></canvas>
+          <canvas id="line" width="640" height="480"></canvas>
         </div>
         <button
           id="saveLandmarksButton"
@@ -351,11 +375,11 @@
         let x, y;
 
         if (landmarkIndex == 12) {
-          x = rect.left + landmark.x * videoElement.width - image.width / 5;
-          y = rect.top + landmark.y * videoElement.height - image.height / 5;
+          x = rect.left + landmark.x * videoElement.width - image.width / 5 + videoElement.width * 1.0;
+          y = rect.top + landmark.y * videoElement.height - image.height / 5 - videoElement.height * 0.4;
         } else {
-          x = rect.left + landmark.x * videoElement.width - image.width / 1.5;
-          y = rect.top + landmark.y * videoElement.height - image.height / 1.5;
+          x = rect.left + landmark.x * videoElement.width - image.width / 1.5 + videoElement.width * 1.0;
+          y = rect.top + landmark.y * videoElement.height - image.height / 1.5 - videoElement.height * 0.4;
         }
 
         image.style.left = `${x}px`;
@@ -398,10 +422,10 @@
         ctx.beginPath();
 
         // 시작점과 끝점 설정
-        const startX = start.x * canvasElement.width;
-        const startY = start.y * canvasElement.height;
-        const endX = end.x * canvasElement.width;
-        const endY = end.y * canvasElement.height;
+        const startX = start.x * canvasElement.width + canvasElement.width * 0.5;
+        const startY = start.y * canvasElement.height + canvasElement.height * 0.1;
+        const endX = end.x * canvasElement.width + canvasElement.width * 0.5;
+        const endY = end.y * canvasElement.height + canvasElement.height * 0.1;
 
         // 각도에 따른 제어점 계산
         const controlX = (startX + endX) / 2;
@@ -567,7 +591,7 @@
             results.poseLandmarks[7],
             middleShoulder
           );
-          placeImageAtLandmark(middleShoulder, "body.png", 12); // 몸 랜드마크
+          placeImageAtLandmark(middleShoulder, "body2.png", 12); // 몸 랜드마크
 
           //거북목 테스트2-기울기 각도
           if (landmark0) {
@@ -583,8 +607,12 @@
                 startTurtleNeckTime = new Date(); // 조건 시작 시간 기록
               } else if (new Date() - startTurtleNeckTime >= 1000) {
                 // 3초 이상 지속되었는지 확인
-                placeImageAtLandmark(results.poseLandmarks[7], "tutle.png", 0); // 머리 랜드마크
-                sendNotification("경고", "거북목 자세가 감지되었습니다!", "turtleNeck");
+                placeImageAtLandmark(results.poseLandmarks[7], "tutle2.png", 0); // 머리 랜드마크
+                sendNotification(
+                  "경고",
+                  "거북목 자세가 감지되었습니다!",
+                  "turtleNeck"
+                );
               }
             } else {
               startTurtleNeckTime = null; // 조건이 더 이상 만족하지 않으면 시간 초기화
@@ -594,8 +622,12 @@
             if (zangle < 45) {
               placeImageAtLandmark(results.poseLandmarks[7], "head3.png", 0); // 머리 랜드마크
             } else {
-              placeImageAtLandmark(results.poseLandmarks[7], "tutle.png", 0); // 머리 랜드마크
-              sendNotification("경고", "거북목 자세가 감지되었습니다!", "turtleNeck");
+              placeImageAtLandmark(results.poseLandmarks[7], "tutle2.png", 0); // 머리 랜드마크
+              sendNotification(
+                "경고",
+                "거북목 자세가 감지되었습니다!",
+                "turtleNeck"
+              );
             }
           }
 
@@ -605,12 +637,12 @@
 
           // 중간 어깨 지점과 머리 중심 지점을 연결하는 선 그리기
           //drawLine(canvasCtx, middleShoulder, results.poseLandmarks[0]);
-          drawBezierLine(
+          /*drawBezierLine(
             canvasCtx,
             middleShoulder,
             results.poseLandmarks[0],
             calculateAngle(middleShoulder, results.poseLandmarks[0])
-          );
+          );*/
 
           // 나머지 랜드마크 그리기
           results.poseLandmarks.forEach((landmark, index) => {
@@ -893,7 +925,7 @@
         // 필요한 데이터가 모두 있는지 확인
         if (!userId || !startTime || !endTime) {
           showToast("필요한 데이터가 누락되었습니다.", "red");
-          console.log('데이터 누락');
+          console.log("데이터 누락");
           return;
         }
 
