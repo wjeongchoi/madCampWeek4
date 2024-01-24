@@ -99,26 +99,121 @@
   </head>
   <body>
     <div class="container">
-    <div style="width: 60%; height: 70%; position: relative;">
-      <div style="width: 201px; height: 52px; left: 20%; top: 0px; position: absolute">
-        <button style="width: 53px; height: 52px; background: #6E8977; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); border-radius: 10px; border: 3px #6E8977 solid; position: absolute;" onmouseover="this.style.background='#5a7866'" onmouseout="this.style.background='#6E8977'">
-              <img style="width: 33px; height: 33px; left: 7px; top: 8px; position: absolute" src="./setting.png" />
+      <div style="width: 60%; height: 70%; position: relative">
+        <div
+          style="
+            width: 201px;
+            height: 52px;
+            left: 20%;
+            top: 0px;
+            position: absolute;
+          "
+        >
+          <button
+            id="settingsButton"
+            style="
+              width: 53px;
+              height: 52px;
+              background: #6e8977;
+              box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+              border-radius: 10px;
+              border: 3px #6e8977 solid;
+              position: absolute;
+            "
+            onmouseover="this.style.background='#5a7866'"
+            onmouseout="this.style.background='#6E8977'"
+          >
+            <img
+              style="
+                width: 33px;
+                height: 33px;
+                left: 7px;
+                top: 8px;
+                position: absolute;
+              "
+              src="./setting.png"
+            />
           </button>
-          <button style="width: 53px; height: 52px; background: #6E8977; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); border-radius: 10px; border: 3px #6E8977 solid; position: absolute; left: 148px;" onmouseover="this.style.background='#5a7866'" onmouseout="this.style.background='#6E8977'">
-              <img style="width: 30px; height: 30px; left: 9px; top: 8px; position: absolute" src="./pause.png" />
+          <button
+            style="
+              width: 53px;
+              height: 52px;
+              background: #6e8977;
+              box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+              border-radius: 10px;
+              border: 3px #6e8977 solid;
+              position: absolute;
+              left: 148px;
+            "
+            onmouseover="this.style.background='#5a7866'"
+            onmouseout="this.style.background='#6E8977'"
+          >
+            <img
+              style="
+                width: 30px;
+                height: 30px;
+                left: 9px;
+                top: 8px;
+                position: absolute;
+              "
+              src="./pause.png"
+            />
           </button>
-          <button style="width: 53px; height: 52px; background: #6E8977; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); border-radius: 10px; border: 3px #6E8977 solid; position: absolute; left: 73px;" onmouseover="this.style.background='#5a7866'" onmouseout="this.style.background='#6E8977'">
-              <img style="width: 30px; height: 30px; left: 10px; top: 9px; position: absolute" src="./play.png" />
+          <button
+            style="
+              width: 53px;
+              height: 52px;
+              background: #6e8977;
+              box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+              border-radius: 10px;
+              border: 3px #6e8977 solid;
+              position: absolute;
+              left: 73px;
+            "
+            onmouseover="this.style.background='#5a7866'"
+            onmouseout="this.style.background='#6E8977'"
+          >
+            <img
+              style="
+                width: 30px;
+                height: 30px;
+                left: 10px;
+                top: 9px;
+                position: absolute;
+              "
+              src="./play.png"
+            />
+          </button>
+
+          <video id="video" width="640" height="480" autoplay muted></video>
+          <canvas id="canvas" width="640" height="480"></canvas>
+          <button
+            style="
+              left: 530px;
+              top: 570px;
+              width: 120px;
+              position: absolute;
+              text-align: center;
+              background: transparent;
+              border: none;
+              color: #5e7666;
+              font-size: 24px;
+              font-family: Inter;
+              font-weight: 700;
+              font-family: 'Escore Dream', sans-serif;
+              word-wrap: break-word;
+            "
+          >
+            통계 보기
+          </button>
+        </div>
+        <button
+          id="saveLandmarksButton"
+          style="font-family: 'Escore Dream', sans-serif"
+        >
+          랜드마크 데이터 저장
         </button>
-      
-      <video id="video" width="640" height="480" autoplay muted></video>
-      <canvas id="canvas" width="640" height="480" ></canvas>
-      <button style="left: 530px; top: 570px; width: 120px; position: absolute; text-align: center; background: transparent; border: none; color: #5E7666; font-size: 24px; font-family: Inter; font-weight: 700; font-family: 'Escore Dream', sans-serif; word-wrap: break-word">
-        통계 보기
-      </button>
-    </div>
-      <button id="saveLandmarksButton" style="font-family: 'Escore Dream', sans-serif">랜드마크 데이터 저장</button>
-  </div>
+      </div>
     </div>
     <div
       id="toast"
@@ -135,7 +230,7 @@
     >
       화면과의 거리가 너무 가깝습니다!
     </div>
-    
+
     <div id="show"></div>
     <script>
       let savedLandmarks = {};
@@ -338,6 +433,11 @@
 
         return angleDegrees;
       }
+      document
+        .getElementById("settingsButton")
+        .addEventListener("click", function () {
+          window.location.href = "../settings";
+        });
 
       // 결과 처리 함수
       function onResults(results) {
