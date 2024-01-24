@@ -9,7 +9,9 @@ router.post('/:type', function(req, res) {
   
     // 현재 시간을 경고 시간으로 설정
     const warning_time = new Date();
-  
+    const hoursToAdd = 9; // 더할 시간 (9시간을 더하려면 9)
+    warning_time.setHours(warning_time.getHours() + hoursToAdd); 
+    
     // 데이터베이스에 경고 데이터 추가
     const query = 'INSERT INTO Warnings (user_id, warning_time, warning_type) VALUES (?, ?, ?)';
     database.query(query, [user_id, warning_time, warning_type], (error, results, fields) => {
