@@ -276,7 +276,7 @@
 
       function updateChart1WithPoseData(dataGet) {
         myChart1.data.labels = Utils.months({ count: 24 });
-        myChart1.data.datasets[0].data = Utils.pose(dataGet);
+        myChart1.data.datasets[0].data = dataGet.map(item => item.warning_count * 0.2);
         console.log(dataGet);
         myChart1.data.datasets[0].backgroundColor = Utils.CHART_COLORS.red;
         myChart1.update();
