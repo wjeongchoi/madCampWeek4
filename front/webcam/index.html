@@ -22,15 +22,25 @@
         justify-content: center;
         align-items: center;
         height: 100vh;
-        background-color: #f0f0f0;
+        background-color: #f5f9de;
+        background-image: url("background.png");
+        background-size: cover;
+        background-repeat: no-repeat;
+      }
+      .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        height: 100%; /* 높이를 100%로 설정 */
+        width: 100%;
       }
 
       #video,
       #canvas {
         position: absolute;
-        transform: translate(-50%, -50%);
-        left: 50%;
-        top: 50%;
+
+        top: 65px;
       }
 
       #video {
@@ -79,12 +89,37 @@
         max-width: 200px;
         overflow: auto;
       }
+      @font-face {
+        font-family: "Escore Dream";
+        src: url("../../SCDream6.otf") format("truetype");
+        font-weight: normal;
+        font-style: normal;
+      }
     </style>
   </head>
   <body>
-    <video id="video" width="640" height="480" autoplay muted></video>
-    <canvas id="canvas" width="640" height="480"></canvas>
-    <button id="saveLandmarksButton">랜드마크 데이터 저장</button>
+    <div class="container">
+    <div style="width: 60%; height: 70%; position: relative;">
+      <div style="width: 201px; height: 52px; left: 20%; top: 0px; position: absolute">
+        <button style="width: 53px; height: 52px; background: #6E8977; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); border-radius: 10px; border: 3px #6E8977 solid; position: absolute;" onmouseover="this.style.background='#5a7866'" onmouseout="this.style.background='#6E8977'">
+              <img style="width: 33px; height: 33px; left: 7px; top: 8px; position: absolute" src="./setting.png" />
+          </button>
+          <button style="width: 53px; height: 52px; background: #6E8977; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); border-radius: 10px; border: 3px #6E8977 solid; position: absolute; left: 148px;" onmouseover="this.style.background='#5a7866'" onmouseout="this.style.background='#6E8977'">
+              <img style="width: 30px; height: 30px; left: 9px; top: 8px; position: absolute" src="./pause.png" />
+          </button>
+          <button style="width: 53px; height: 52px; background: #6E8977; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); border-radius: 10px; border: 3px #6E8977 solid; position: absolute; left: 73px;" onmouseover="this.style.background='#5a7866'" onmouseout="this.style.background='#6E8977'">
+              <img style="width: 30px; height: 30px; left: 10px; top: 9px; position: absolute" src="./play.png" />
+        </button>
+      
+      <video id="video" width="640" height="480" autoplay muted></video>
+      <canvas id="canvas" width="640" height="480" ></canvas>
+      <button style="left: 530px; top: 570px; width: 120px; position: absolute; text-align: center; background: transparent; border: none; color: #5E7666; font-size: 24px; font-family: Inter; font-weight: 700; font-family: 'Escore Dream', sans-serif; word-wrap: break-word">
+        통계 보기
+      </button>
+    </div>
+      <button id="saveLandmarksButton" style="font-family: 'Escore Dream', sans-serif">랜드마크 데이터 저장</button>
+  </div>
+    </div>
     <div
       id="toast"
       style="
@@ -100,17 +135,7 @@
     >
       화면과의 거리가 너무 가깝습니다!
     </div>
-    <div
-      id="landmarkDataDisplay"
-      style="
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: rgba(255, 255, 255, 0.8);
-        padding: 10px;
-        border-radius: 5px;
-      "
-    ></div>
+    
     <div id="show"></div>
     <script>
       let savedLandmarks = {};
