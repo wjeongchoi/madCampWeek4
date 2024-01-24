@@ -371,14 +371,24 @@
             return response.json();
           })
           .then((data) => {
-            updateChart2WithData(data);
+            if (data.message === "No warnings found for this user on the specified date") {
+
+              updateChart2WithData([{"warning_type": 1, "warning_count": 0}, {"warning_type": 2, "warning_count": 0}, {"warning_type": 3, "warning_count": 0}]);
+            } else {
+              updateChart2WithData(data);
+            }
           })
           .catch((error) => {
+            updateChart2WithData([{"warning_type": 1, "warning_count": 0}, {"warning_type": 2, "warning_count": 0}, {"warning_type": 3, "warning_count": 0}]);
             console.error(
               "There has been a problem with your fetch operation:",
               error
             );
           });
+      }
+
+      function hideChart2() {
+        document.getElementById('chartContainer2').style.display = 'none';
       }
 
       function updateChart2WithData(warningData) {
