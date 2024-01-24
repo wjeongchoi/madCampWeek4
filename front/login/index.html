@@ -208,7 +208,7 @@
 
       <!-- 회원가입 링크 -->
       <div style="position: relative; text-align: right; padding-left: 30px">
-        <a href="../signUp/index.html" class="text-style signup-text"
+        <a href="../signUp" class="text-style signup-text"
           >회원가입</a
         >
       </div>
@@ -244,7 +244,7 @@
             localStorage.setItem("userId", id);
             showToast("로그인 성공", "#618B43");
             setTimeout(function () {
-                window.location.href = "../chart/index.html";
+                window.location.href = "../chart";
               }, 3000);
           } else {
             // 그 외의 오류

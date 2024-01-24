@@ -439,13 +439,13 @@
 
         // 자세 재설정 페이지로 리디렉션하는 함수
         function redirectToPoseSave() {
-            window.location.href = '../poseSave/index.html';
+            window.location.href = '../poseSave';
         }
     
         // 로그아웃 함수
         function logout() {
             localStorage.removeItem('userId');
-            window.location.href = '../login/index.html';
+            window.location.href = '../login';
         }
     
         // 계정 삭제를 위한 프롬프트 표시 함수
@@ -471,7 +471,7 @@
                         showToast("계정이 삭제되었습니다.", "green");
                         localStorage.removeItem('userId');
                         setTimeout(function () {
-                            window.location.href = '../login/index.html';
+                            window.location.href = '../login';
                             }, 3000);
                     } else {
                         showToast("비밀번호가 일치하지 않거나 계정을 찾을 수 없습니다.", "red");

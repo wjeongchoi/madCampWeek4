@@ -408,7 +408,7 @@
         if (!userId) {
           showToast("먼저 로그인해주세요", "red"); // alert 대신 showToast 함수 사용
           setTimeout(function () {
-            window.location.href = "../login/index.html";
+            window.location.href = "../login";
           }, 3000); // 3초 후에 로그인 페이지로 리디렉션
           return; // userId가 없으면 나머지 스크립트 실행 중단
         }
@@ -424,10 +424,10 @@
       const myChart2 = new Chart(document.getElementById("myChart2"), config2);
 
       function redirectToSettings() {
-        window.location.href = "../settings/index.html";
+        window.location.href = "../settings";
       }
       function redirectToWebcam() {
-        window.location.href = "../webcam/index.html";
+        window.location.href = "../webcam";
       }
     </script>
   </body>
