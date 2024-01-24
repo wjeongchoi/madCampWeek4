@@ -2,6 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8" />
+    <script src="../common.js"></script>
     <title>Pose Estimation</title>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils"></script>
     <script
@@ -312,14 +313,6 @@
 
       const images = {}; // 각 랜드마크에 대한 이미지 객체 저장
       //토스트 메시지 띄우기
-      function showToast(message) {
-        const toast = document.getElementById("toast");
-        toast.textContent = message;
-        toast.style.display = "block";
-        setTimeout(() => {
-          toast.style.display = "none";
-        }, 500); // 3초 후에 숨김
-      }
 
       function placeImageAtLandmark(landmark, imageUrl, landmarkIndex) {
         let image = images[landmarkIndex];
