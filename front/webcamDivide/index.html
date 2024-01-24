@@ -55,11 +55,11 @@
         transform: translate(0%, 2%);
       }
 
-      #line {
-        z-index: 2;
-        background: transparent;
-        transform: translateX(40%);
-      }
+
+
+
+
+
 
       #saveLandmarksButton {
         position: fixed;
@@ -100,8 +100,8 @@
       }
       #rightPanel {
         position: fixed;
-        right: 10%;
-        top: 22%;
+        left: 900px;
+        top: 220px;
         width: 500px; /* 너비 설정 */
         height: 600px; /* 전체 높이 */
         background-color: #fcfdf4; /* 기존 배경색보다 연한 색 */
@@ -120,8 +120,9 @@
     </style>
   </head>
   <body>
-    <div id="rightPanel"></div>
+    
     <div class="container">
+      <div id="rightPanel"></div>
       <div style="width: 60%; height: 70%; position: relative">
         <div
           style="
@@ -177,28 +178,9 @@
           </button>
       </div>
           
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
 
           <video id="video" width="640" height="480" autoplay muted></video>
           <canvas id="canvas" width="640" height="480"></canvas>
-          <canvas id="line" width="640" height="480"></canvas>
         </div>
         <button
           id="saveLandmarksButton"
@@ -332,10 +314,13 @@
         let x, y;
 
         if (landmarkIndex == 12) {
-          x = rect.left + landmark.x * videoElement.width - image.width / 5 + videoElement.width * 1.0;
+          x = rect.left + landmark.x * videoElement.width - image.width / 5 + videoElement.width * 0.9;
           y = rect.top + landmark.y * videoElement.height - image.height / 5 - videoElement.height * 0.4;
         } else {
-          x = rect.left + landmark.x * videoElement.width - image.width / 1.5 + videoElement.width * 1.0;
+          //x = rect.left + landmark.x * videoElement.width - image.width / 1.5 + videoElement.width * 0.9;
+          //y = rect.top + landmark.y * videoElement.height - image.height / 1.5 - videoElement.height * 0.4;
+          //x = rect.left + (landmark.z - 1.6) * videoElement.width/10 - image.width / 1.5 + videoElement.width * 1.8;
+          x = rect.left + (landmark.z - landmark7.z) * videoElement.width/10 - image.width / 1.5 + videoElement.width * 1.8;
           y = rect.top + landmark.y * videoElement.height - image.height / 1.5 - videoElement.height * 0.4;
         }
 
