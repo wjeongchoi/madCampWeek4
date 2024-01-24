@@ -344,10 +344,6 @@
             return document.getElementById(toggleId).classList.contains('active');
         }
     
-        // 드롭다운의 선택된 값을 가져오는 함수
-        function getDropdownValue() {
-            return document.querySelector('.dropdown').value;
-        }
     
         // 토글 버튼에 대한 이벤트 리스너 추가
         document.getElementById('toggleButton1').addEventListener('click', function() {
@@ -369,9 +365,9 @@
             const turtle = getToggleState('toggleButton2');
             const close = getToggleState('toggleButton3');
             const tilted = getToggleState('toggleButton4');
-            const alert = parseInt(getDropdownValue().replace('option', ''), 10);
+            const alert = 1;
             const user_id = localStorage.getItem("userId");
-    
+
             if (user_id) {
                 fetch('http://3.34.146.225:3000/setting', {
                     method: 'POST',
@@ -388,6 +384,12 @@
                 })
                 .then(result => {
                     showToast("설정이 저장되었습니다.", "green");
+
+                    // 3초 후 이전 페이지로 이동
+                    setTimeout(function() {
+                        window.history.back();
+                    }, 3000);
+
                 })
                 .catch(error => {
                     showToast('Error updating settings: ' + error, "red");
@@ -396,7 +398,45 @@
                 showToast("로그인된 사용자 ID를 찾을 수 없습니다.", "red");
             }
         });
-    
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const user_id = localStorage.getItem("userId");
+
+            if (user_id) {
+                fetchUserSettings(user_id);
+            } else {
+                showToast("로그인된 사용자 ID를 찾을 수 없습니다.", "red");
+            }
+        });
+
+        function fetchUserSettings(userId) {
+            fetch(`http://3.34.146.225:3000/setting?user_id=${userId}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(settings => {
+                setToggleState('toggleButton1', settings.screen);
+                setToggleState('toggleButton2', settings.turtle);
+                setToggleState('toggleButton3', settings.close);
+                setToggleState('toggleButton4', settings.tilted);
+            })
+            .catch(error => {
+                showToast("사용자 설정을 불러오는데 실패했습니다: " + error, "red");
+            });
+        }
+
+        function setToggleState(toggleId, state) {
+            const toggleButton = document.getElementById(toggleId);
+            if (state) {
+                toggleButton.classList.add('active');
+            } else {
+                toggleButton.classList.remove('active');
+            }
+        }
+
         // 자세 재설정 페이지로 리디렉션하는 함수
         function redirectToPoseSave() {
             window.location.href = '../poseSave/index.html';
