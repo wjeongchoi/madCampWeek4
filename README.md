@@ -44,7 +44,7 @@ BE: Express, MySQL
 <br/>
 
 ## 2 통계 화면/차트
-<img src="./readmeImage/chartGIF.gif" height=360 width=640>
+<img src="./readmeImage/newChartGIF.gif" height=360 width=640>
 
 
 ### 2.1 주요 기능
