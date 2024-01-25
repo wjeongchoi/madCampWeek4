@@ -80,6 +80,8 @@ BE: Express, MySQL
 <br/>
 
 ## 5 나의 웹캠
+<img src="./readmeImage/webcamGIF.gif" height=360 width=640>
+<img src="./readmeImage/extensionGIF.gif" height=360 width=640>
   
 ### 5.1 주요 기능
 - PIP를 이용하여 사용자의 모습을 찍는 캠 화면을 팝업으로 띄웁니다.
