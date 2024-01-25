@@ -24,8 +24,10 @@ BE: Django, MySQL
 - 노트북 사용 시간과 바르지 못한 자세를 취한 시간 및 횟수를 기록하여 데이터베이스에 저장합니다.
 - 저장된 정보는 사용자와 날짜별로 그래프 형태로 시각화하여 제공합니다.
 <br/>
+
 ## 1 로그인
 <img src="./readmeImage/loginGIF.gif" height=360 width=640>
+<img src="./readmeImage/signupGIF.gif" height=360 width=640>
 
 
 
@@ -39,6 +41,7 @@ BE: Django, MySQL
 <br/>
 
 ## 2 통계 화면/차트
+<img src="./readmeImage/chartGIF.gif" height=360 width=640>
 
 
 ### 2.1 주요 기능
@@ -52,6 +55,7 @@ BE: Django, MySQL
 <br/>
 
 ## 3 환경 설정
+<img src="./readmeImage/settingGIF.gif" height=360 width=640>
 
 ### 3.1 주요 기능
 - 캐릭터 모드 사용 여부 설정 및 기록할 경고 자세의 종류를 설정할 수 있습니다.
@@ -61,6 +65,7 @@ BE: Django, MySQL
 <br/>
 
 ## 4 자세 저장
+<img src="./readmeImage/savePoseGIF.gif" height=360 width=640>
 
 ### 4.1 주요 기능
 - 사용자의 모습을 찍는 캠 화면을 중앙에 띄웁니다.
