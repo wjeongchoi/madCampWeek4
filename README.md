@@ -31,7 +31,7 @@ BE: Express, MySQL
 
 ## 1 로그인
 <img src="./readmeImage/loginGIF.gif" height=360 width=640>
-<img src="./readmeImage/signupGIF.gif" height=360 width=640>
+<img src="./readmeImage/signUpGIF.gif" height=360 width=640>
 
 
 
