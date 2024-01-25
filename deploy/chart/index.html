@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>나의 통계</title>
+    <meta charset="UTF-8" />
+    <script src="../common.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      body {
+        display: flex;
+        width: 100%;
+        height: 100vh; /* 높이를 화면 전체로 조정 */
+        margin: 0; /* 기본 마진 제거 */
+        padding: 0; /* 패딩 조정 */
+        background: rgba(237, 244, 193, 0.52);
+        justify-content: center;
+        align-items: center;
+        
+      }
+
+      .chart-container {
+        position: relative;
+        background: white;
+        box-shadow: 0px 3px 3px rgba(0, 0, 0, 0.2) inset;
+        border-radius: 10px;
+        height: 65%;
+        padding: 30px;
+        flex-direction: column;
+        justify-content: center; /* 수평 중앙 정렬 */
+        align-items: center; /* 수직 중앙 정렬 */
+      }
+      #chartContainer1 {
+        margin: 20px;
+        width: 50%;
+        padding: 20px;
+        justify-content: center; /* 수평 중앙 정렬 */
+        align-items: center; /* 수직 중앙 정렬 */
+      }
+      #chartContainer2 {
+        margin: 30px; /* 차트 사이의 간격 */
+        width: 30%;
+        padding: 20px;
+        justify-content: center; /* 수평 중앙 정렬 */
+        align-items: center; /* 수직 중앙 정렬 */
+      }
+
+      .chart-title {
+        position: absolute;
+
+        color: #6e8977;
+        font-size: 30px;
+        font-family: "Escore Dream", sans-serif;
+        font-weight: 700;
+        text-transform: uppercase;
+        line-height: 20px;
+        word-wrap: break-word;
+        top: -40px; /* 텍스트 위치 조정 */
+      }
+
+      #title1 {
+        position: absolute;
+        left: 0; /* 왼쪽 끝으로 정렬 */
+        top: -40px;
+        width: 737px;
+      }
+
+      #title2 {
+        left: 0px;
+        width: 404px;
+      }
+
+      .canvas {
+        width: 100%;
+        height: 100%;
+      }
+      .custom-button {
+        width: 53px;
+        height: 53px;
+        position: absolute;
+        top: -67px;
+        right: 0;
+        background: #6e8977;
+        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+        border-radius: 10px;
+        border: 3px #6e8977 solid;
+        padding: 0;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+
+      .custom-button:hover {
+        background-color: #5b7866; /* 호버 시의 색상 */
+      }
+
+      .custom-button img {
+        width: 33px;
+        height: 33px;
+        position: absolute;
+        left: 10px;
+        top: 10px;
+      }
+      .date-picker {
+        all: unset;  
+        /*background-color: white;        /* 배경을 흰색으로 설정 */
+        /*border: 2px solid #6e8977;      /* 테두리 색상을 #6e8977로 설정 */
+        /*border-radius: 10px;            /* 모서리를 둥글게 처리 */
+        /*box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);  그림자 효과 추가 */
+      }
+
+      @font-face {
+        font-family: "Escore Dream";
+        src: url("../../SCDream6.otf") format("truetype");
+        font-weight: normal;
+        font-style: normal;
+      }
+    </style>
+  </head>
+  <body>
+
+
+
+    <div class="chart-container" id="chartContainer1">
+      <div class="chart-title" id="title1">노트북 사용 시간</div>
+      <canvas id="myChart1" width="737" height="566"></canvas>
+      <div class="date-picker">
+        <input type="date" id="dateInput" onchange="loadDataForSelectedDate()" style="margin-top: 20px;" />
+      </div>
+    </div>
+    <div class="chart-container" id="chartContainer2">
+      <div class="chart-title" id="title2">나의 나쁜 자세</div>
+      <canvas id="myChart2" width="404" height="566"></canvas>
+
+      <div>
+        <button class="custom-button" onclick="redirectToSettings()">
+          <img src="./setting.png" />
+        </button>
+      </div>
+      
+
+
+
+    </div>
+    </div>
+    
+    <script>
+      // Utils for chart 1
+      const Utils = {
+        CHART_COLORS: {
+          red: "rgb(97, 139, 67)",
+          blue: "rgb(197, 224, 111)",
+          green: "rgb(75, 192, 192)",
+        },
+        months: ({ count }) => {
+          const months = [
+            "0시",
+            "1시",
+            "2시",
+            "3시",
+            "4시",
+            "5시",
+            "6시",
+            "7시",
+            "8시",
+            "9시",
+            "10시",
+            "11시",
+            "12시",
+            "13시",
+            "14시",
+            "15시",
+            "16시",
+            "17시",
+            "18시",
+            "19시",
+            "20시",
+            "21시",
+            "22시",
+            "23시",
+          ];
+          return months.slice(0, count);
+        },
+        labtop: (dataGet) => {
+          const numbers = [];
+          dataGet.forEach((item) => {
+            numbers.push(item.usage_time);
+          });
+          return numbers;
+        },
+        pose: (dataGet) => {
+          const numbers = [];
+          dataGet.forEach((item) => {
+            numbers.push(item.warning_count);
+          });
+          return numbers;
+        },
+      };
+
+      // Fetch usage data from the API for chart 1
+      function fetchUsageData(selectdate) {
+        const date = selectdate;
+        const userId = localStorage.getItem("userId");
+
+        if (userId) {
+          // userId가 존재하면, userId를 사용하는 로직을 여기에 추가
+          console.log("사용자 ID:", userId);
+        } else {
+          // userId가 없는 경우, 에러 메시지를 출력
+          console.error("로그인된 사용자 ID를 찾을 수 없습니다.");
+        }
+
+        fetch(
+          `http://3.34.146.225:3000/usage/today?date=${date}&user_id=${userId}`
+        )
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(
+                "Network response was not ok " + response.statusText
+              );
+            }
+            return response.json();
+          })
+          .then((dataGet) => {
+            updateChart1WithData(dataGet);
+          })
+          .catch((error) => {
+            console.error(
+              "There has been a problem with your fetch operation:",
+              error
+            );
+          });
+      }
+
+      // Fetch usage data from the API for chart 1
+      function fetchPoseData(selectdate) {
+        const date = selectdate;
+        const userId = localStorage.getItem("userId");
+
+        if (userId) {
+          // userId가 존재하면, userId를 사용하는 로직을 여기에 추가
+          console.log("사용자 ID:", userId);
+        } else {
+          // userId가 없는 경우, 에러 메시지를 출력
+          console.error("로그인된 사용자 ID를 찾을 수 없습니다.");
+        }
+
+        fetch(
+          `http://3.34.146.225:3000/warning/time?date=${date}&user_id=${userId}`
+        )
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(
+                "Network response was not ok " + response.statusText
+              );
+            }
+            return response.json();
+          })
+          .then((dataGet) => {
+            updateChart1WithPoseData(dataGet);
+          })
+          .catch((error) => {
+            console.error(
+              "There has been a problem with your fetch operation:",
+              error
+            );
+          });
+      }
+
+      function updateChart1WithData(dataGet) {
+        myChart1.data.labels = Utils.months({ count: 24 });
+        myChart1.data.datasets[1].data = Utils.labtop(dataGet);
+        myChart1.data.datasets[1].backgroundColor = Utils.CHART_COLORS.blue;
+        myChart1.update();
+      }
+
+      function updateChart1WithPoseData(dataGet) {
+        myChart1.data.labels = Utils.months({ count: 24 });
+        myChart1.data.datasets[0].data = dataGet.map(item => item.warning_count * 0.2);
+        console.log(dataGet);
+        myChart1.data.datasets[0].backgroundColor = Utils.CHART_COLORS.red;
+        myChart1.update();
+      }
+
+      // Chart 1 configuration
+      const config1 = {
+        type: "bar",
+        data: {
+          labels: Utils.months({ count: 24 }),
+          datasets: [
+            {
+              label: "나쁜 자세 시간",
+              backgroundColor: [],
+              data: [], // initial empty data
+            },
+            {
+              label: "사용 시간",
+              backgroundColor: [],
+              data: [], // initial empty data
+            },
+          ],
+        },
+        options: {
+          plugins: {
+            title: {
+              display: true,
+              text: " ",
+            },
+          },
+          responsive: true,
+          scales: {
+            x: {
+              stacked: true,
+            },
+            y: {
+              stacked: false,
+            },
+          },
+        },
+      };
+
+      // Utils for chart 2
+      const Utils2 = {
+        CHART_COLORS: {
+          red: "rgb(233, 241, 181)",
+          orange: "rgb(94, 118, 102)",
+          yellow: "rgb(189, 230, 192)",
+          green: "rgb(75, 192, 192)",
+          blue: "rgb(54, 162, 235)",
+        },
+        processData: (data) => {
+          const counts = data.map((item) => item.warning_count);
+          const labels = data.map((item) => {
+            switch (item.warning_type) {
+              case 1: // 예시로, warning_type이 1일 때 '거북목'
+                return "거북목";
+              case 2: // 예시로, warning_type이 2일 때 '화면 밀착'
+                return "화면 밀착";
+              case 3: // 예시로, warning_type이 3일 때 '틀어짐'
+                return "틀어짐";
+              default:
+                return `자세 ${item.warning_type}`; // 기타 경우
+            }
+          });
+          return { counts, labels };
+        },
+      };
+
+      // Fetch warning data from the API for chart 2
+      function fetchWarningData(selectdate) {
+        const date = selectdate;
+        const userId = localStorage.getItem("userId");
+
+        if (userId) {
+          // userId가 존재하면, userId를 사용하는 로직을 여기에 추가
+          console.log("사용자 ID:", userId);
+        } else {
+          // userId가 없는 경우, 에러 메시지를 출력
+          console.error("로그인된 사용자 ID를 찾을 수 없습니다.");
+        }
+
+        fetch(
+          `http://3.34.146.225:3000/warning/today?date=${date}&user_id=${userId}`
+        )
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(
+                "Network response was not ok " + response.statusText
+              );
+            }
+            return response.json();
+          })
+          .then((data) => {
+            if (data.message === "No warnings found for this user on the specified date") {
+
+              updateChart2WithData([{"warning_type": 1, "warning_count": 0}, {"warning_type": 2, "warning_count": 0}, {"warning_type": 3, "warning_count": 0}]);
+            } else {
+              updateChart2WithData(data);
+            }
+          })
+          .catch((error) => {
+            updateChart2WithData([{"warning_type": 1, "warning_count": 0}, {"warning_type": 2, "warning_count": 0}, {"warning_type": 3, "warning_count": 0}]);
+            console.error(
+              "There has been a problem with your fetch operation:",
+              error
+            );
+          });
+      }
+
+      function hideChart2() {
+        document.getElementById('chartContainer2').style.display = 'none';
+      }
+
+      function updateChart2WithData(warningData) {
+        const processedData = Utils2.processData(warningData);
+        myChart2.data.labels = processedData.labels;
+        myChart2.data.datasets[0].data = processedData.counts;
+        myChart2.update();
+      }
+
+      // Chart 2 configuration
+      const config2 = {
+        type: "pie",
+        data: {
+          labels: [],
+          datasets: [
+            {
+              label: "나쁜 자세",
+              backgroundColor: Object.values(Utils2.CHART_COLORS),
+              data: [], // initial empty data
+            },
+          ],
+        },
+        options: {
+          plugins: {
+            legend: {
+              position: "top",
+            },
+            title: {
+              display: true,
+              text: " ",
+            },
+          },
+        },
+      };
+      document.addEventListener("DOMContentLoaded", () => {
+        const userId = localStorage.getItem("userId");
+        if (!userId) {
+          showToast("먼저 로그인해주세요", "red"); // 로그인 안내 메시지
+          setTimeout(function() {
+            window.location.href = "../login"; // 1초 후에 로그인 페이지로 이동
+          }, 1000);
+          return; // userId가 없으면 나머지 스크립트 실행 중단
+        }
+
+        // 현재 날짜를 기본값으로 설정하고 해당 날짜에 대한 데이터 로드
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('dateInput').value = today;
+        loadDataForSelectedDate(); // 오늘 날짜에 대한 데이터 로드
+      });
+
+      // 선택된 날짜에 대한 데이터 로드 함수
+      function loadDataForSelectedDate() {
+        const selectedDate = document.getElementById('dateInput').value;
+        const userId = localStorage.getItem("userId");
+
+        if (selectedDate && userId) {
+          fetchUsageData(selectedDate, userId);
+          fetchPoseData(selectedDate, userId);
+          fetchWarningData(selectedDate, userId);
+        } else {
+          console.error('선택된 날짜가 유효하지 않거나 로그인된 사용자 ID를 찾을 수 없습니다.');
+        }
+      }
+
+
+      // Create the charts
+      const myChart1 = new Chart(document.getElementById("myChart1"), config1);
+      const myChart2 = new Chart(document.getElementById("myChart2"), config2);
+
+      function redirectToSettings() {
+        window.location.href = "../settings";
+      }
+    </script>
+  </body>
+</html>
