@@ -1,17 +1,20 @@
-# 앱이름 
-<br/><br/><br/>
-## 🚀 슬로건
-💡 추후 슬로건 멘트 생각
-<br/><br/>
+
+# CURVE: Code Upright, Refine Vertebrae Everyday
+
+<aside>
+ 💻 노트북 할 때 바른 자세를 유지시켜주는 크롬 익스텐션 앱
+
+</aside>
+
 ## 👩‍💻👨‍💻 개발 팀원
 - 서해린 : KAIST 전산학부 22학번
 - 최우정 : KAIST 화학과 21학번
 <br/><br/>
 ## ⚙️ 개발 환경
-FE: javascript, CSS, figma
-BE: Django, MySQL
+FE: Vanilla JS 
+BE: Express, MySQL
 <br/><br/>
-## ℹ️ 애플리케이션 설명
+## ℹ️ 서비스 설명
 ## 주요 기능
 - 자세 교정을 도와주는 서비스입니다.
 - 'mediapipe' 라이브러리를 이용하여 별 다른 장치 없이 웹캠만으로 사용자의 자세 정보를 정확하게 추출합니다.
@@ -24,8 +27,10 @@ BE: Django, MySQL
 - 노트북 사용 시간과 바르지 못한 자세를 취한 시간 및 횟수를 기록하여 데이터베이스에 저장합니다.
 - 저장된 정보는 사용자와 날짜별로 그래프 형태로 시각화하여 제공합니다.
 <br/>
+
 ## 1 로그인
-<img src="./readmeImage/loginPage.png" height=360 width=640>
+<img src="./readmeImage/loginGIF.gif" height=360 width=640>
+<img src="./readmeImage/signupGIF.gif" height=360 width=640>
 
 
 
@@ -39,6 +44,7 @@ BE: Django, MySQL
 <br/>
 
 ## 2 통계 화면/차트
+<img src="./readmeImage/newChartGIF.gif" height=360 width=640>
 
 
 ### 2.1 주요 기능
@@ -52,6 +58,7 @@ BE: Django, MySQL
 <br/>
 
 ## 3 환경 설정
+<img src="./readmeImage/settingGIF.gif" height=360 width=640>
 
 ### 3.1 주요 기능
 - 캐릭터 모드 사용 여부 설정 및 기록할 경고 자세의 종류를 설정할 수 있습니다.
@@ -61,6 +68,7 @@ BE: Django, MySQL
 <br/>
 
 ## 4 자세 저장
+<img src="./readmeImage/savePoseGIF.gif" height=360 width=640>
 
 ### 4.1 주요 기능
 - 사용자의 모습을 찍는 캠 화면을 중앙에 띄웁니다.
