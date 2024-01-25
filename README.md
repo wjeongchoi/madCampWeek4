@@ -1,16 +1,15 @@
 # CURVE: Code Upright, Refine Vertebrae Everyday
-<br/><br/><br/>
 ## 💡 노트북 할 때 바른 자세를 유지시켜주는 크롬 익스텐션 앱
-<br/><br/>
+<br/>
 ## 👩‍💻👨‍💻 개발 팀원
 - 서해린 : KAIST 전산학부 22학번
 - 최우정 : KAIST 화학과 21학번
 <br/><br/>
 ## ⚙️ 개발 환경
-FE: javascript, CSS, figma
-BE: Django, MySQL
+FE: Vanilla JS 
+BE: Express, MySQL
 <br/><br/>
-## ℹ️ 애플리케이션 설명
+## ℹ️ 서비스 설명
 ## 주요 기능
 - 자세 교정을 도와주는 서비스입니다.
 - 'mediapipe' 라이브러리를 이용하여 별 다른 장치 없이 웹캠만으로 사용자의 자세 정보를 정확하게 추출합니다.
