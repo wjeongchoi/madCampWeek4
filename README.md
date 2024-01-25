@@ -28,7 +28,17 @@ BE: Express, MySQL
 - 노트북 사용 시간과 바르지 못한 자세를 취한 시간 및 횟수를 기록하여 데이터베이스에 저장합니다.
 - 저장된 정보는 사용자와 날짜별로 그래프 형태로 시각화하여 제공합니다.
 <br/>
+## 0 How to use
 
+- 서버가 종료되어 작동하지 않을 수 있습니다
+1. `git clone https://github.com/wjeongchoi/madCampWeek4.git`
+2. 크롬 익스텐션 - 확장 프로그램 관리에서 개발자 모드를 켭니다.
+3. “압축해제된 확장 프로그램을 로드합니다”에서 `extension` 폴더를 선택해 크롬 익스텐션을 업로드합니다.
+4. `cd front`로 FE 폴더에 들어가고, `python -m http.server` 로 로컬에서 페이지를 엽니다.
+5. `localhost:8000`으로 접속합니다.
+6. 크롬 익스텐션을 사용할 때는, “CURVE chrome extension”을 찾아 사용합니다.
+
+<br/>
 ## 1 로그인
 <img src="./readmeImage/loginGIF.gif" height=360 width=640>
 <img src="./readmeImage/signUpGIF.gif" height=360 width=640>
