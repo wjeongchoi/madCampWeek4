@@ -319,8 +319,8 @@
         } else {
           //x = rect.left + landmark.x * videoElement.width - image.width / 1.5 + videoElement.width * 0.9;
           //y = rect.top + landmark.y * videoElement.height - image.height / 1.5 - videoElement.height * 0.4;
-          //x = rect.left + (landmark.z - 1.6) * videoElement.width/10 - image.width / 1.5 + videoElement.width * 1.8;
-          x = rect.left + (landmark.z - landmark7.z) * videoElement.width/10 - image.width / 1.5 + videoElement.width * 1.8;
+          x = rect.left + (landmark.z - 1.6) * videoElement.width/10 - image.width / 1.5 + videoElement.width * 1.8;
+          //x = rect.left + (landmark.z - landmark7.z) * videoElement.width/10 - image.width / 1.5 + videoElement.width * 1.8;
           y = rect.top + landmark.y * videoElement.height - image.height / 1.5 - videoElement.height * 0.4;
         }
 
