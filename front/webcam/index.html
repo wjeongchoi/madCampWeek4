@@ -874,6 +874,8 @@
         if (!lastWarningTime || now - lastWarningTime >= 5000) {
           // 5초 체크
           if (Notification.permission === "granted") {
+            canvasElement.style.backgroundColor = "rgba(255, 165, 0, 0.3)"; // 투명도 30%의 주황색
+
             new Notification(title, { body: body });
             console.log(body);
 
@@ -992,6 +994,28 @@
             showToast("사용 데이터 저장 중 오류가 발생했습니다.", "red");
           });
       }
+
+      function checkWarnings() {
+        const now = new Date();
+
+        // 모든 경고가 5초 이상 지속되지 않았는지 확인
+        const noRecentWarnings =
+          (!lastNearWarningTime || now - lastNearWarningTime >= 3000) &&
+          (!lastTiltLeftWarningTime || now - lastTiltLeftWarningTime >= 3000) &&
+          (!lastTiltRightWarningTime ||
+            now - lastTiltRightWarningTime >= 3000) &&
+          (!lastTurtleNeckWarningTime ||
+            now - lastTurtleNeckWarningTime >= 3000);
+
+        // 모든 경고가 해소된 경우
+        if (noRecentWarnings) {
+          // 캔버스 배경을 다시 투명하게 설정
+          canvasElement.style.backgroundColor = "transparent";
+        }
+      }
+
+      // 일정 간격으로 경고 상태 확인
+      setInterval(checkWarnings, 1000); // 예: 매 1초마다 경고 상태 확인
     </script>
   </body>
 </html>
