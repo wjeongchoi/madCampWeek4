@@ -849,6 +849,7 @@
             // 경고 소리 재생
             var audio = new Audio(audioUrl);
             audio.play();
+            showToast(body, "red");
             sendWarningDataToServer(warningTypeId);
           }
 
