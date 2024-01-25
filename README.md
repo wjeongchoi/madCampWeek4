@@ -12,6 +12,7 @@
 <br/><br/>
 ## ⚙️ 개발 환경
 FE: Vanilla JS 
+<br/>
 BE: Express, MySQL
 <br/><br/>
 ## ℹ️ 서비스 설명
