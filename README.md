@@ -25,7 +25,7 @@ BE: Django, MySQL
 - 저장된 정보는 사용자와 날짜별로 그래프 형태로 시각화하여 제공합니다.
 <br/>
 ## 1 로그인
-<img src="./readmeImage/loginPage.png" height=128 width=72>
+<img src="./readmeImage/loginPage.png" height=72 width=128>
 
 
 
