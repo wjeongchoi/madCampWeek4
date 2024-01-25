@@ -55,6 +55,7 @@ router.get("/today", function (req, res) {
       results.forEach(result => {
         // 초 단위를 분 단위로 변환하고 올림 처리
         hourlyUsage[result.hour].usage_time = Math.ceil(result.usage_time / 60);
+        hourlyUsage[result.hour].usage_time = usageTimeInMinutes > 60 ? 60 : usageTimeInMinutes;
       });
 
       res.status(200).json(hourlyUsage);
