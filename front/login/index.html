@@ -237,7 +237,7 @@
             showToast("비밀번호가 일치하지 않습니다.", "#DC6875");
           } else if (text === "User logged in successfully") {
             localStorage.setItem("userId", id);
-            checkUserCoordinates(id); // 사용자 신체 좌표 확인 함수 호출
+            checkUserSettingsAndCoordinates(id);
           } else {
             alert("로그인 오류: " + text);
           }
@@ -245,6 +245,40 @@
         .catch((error) => {
           console.error(error);
           showToast("로그인 중 오류가 발생했습니다.", "#DC6875");
+        });
+    }
+
+    function checkUserSettingsAndCoordinates(userId) {
+      fetch(`http://3.34.146.225:3000/setting?user_id=${userId}`)
+        .then((response) => {
+          if (!response.ok) {
+            resetUserSettings(userId);
+          } else {
+            checkUserCoordinates(userId);
+          }
+        })
+        .catch((error) => {
+          console.error("Error fetching user settings:", error);
+          showToast("사용자 설정 조회 중 오류가 발생했습니다.", "#DC6875");
+        });
+    }
+
+    function resetUserSettings(userId) {
+      fetch("http://3.34.146.225:3000/setting/reset", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ user_id: userId }),
+      })
+        .then((response) => response.text())
+        .then((data) => {
+          console.log("User settings reset: " + data);
+          checkUserCoordinates(userId);
+        })
+        .catch((error) => {
+          console.error("Error resetting user settings:", error);
+          showToast("사용자 설정 초기화 중 오류가 발생했습니다.", "#DC6875");
         });
     }
 

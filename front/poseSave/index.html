@@ -219,9 +219,16 @@
           .then((data) => {
             console.log(data);
             showToast("포즈 저장 완료", "green"); // 성공 메시지를 표시
-            setTimeout(function () {
-              window.location.href = "../settings";
-            }, 1000); // 성공 메시지 표시 후 3초 뒤에 페이지 이동
+            // 직전 페이지가 로그인 페이지였는지 확인하고, 해당되면 웹캠 페이지로 이동
+            if (document.referrer.includes("login")) {
+              setTimeout(() => {
+                window.location.href = "../webcam";
+              }, 1000);
+            } else {
+              setTimeout(() => {
+                window.location.href = "../settings";
+              }, 1000);
+            }
           })
           .catch((error) => {
             console.error("Error:", error);
