@@ -374,8 +374,9 @@
           x = rect.left + landmark.x * videoElement.width - image.width / 5 + videoElement.width * 0.9;
           y = rect.top + landmark.y * videoElement.height - image.height / 5 - videoElement.height * 0.4;
         } else {
-          x = rect.left + (landmark.z - landmark7.z) * videoElement.width/10 - image.width / 1.5 + videoElement.width * 1.8;
-          y = rect.top + landmark.y * videoElement.height - image.height / 1.5 - videoElement.height * 0.4;
+          x = rect.left + (landmark.z - landmark7.z) * videoElement.width/10 - image.width / 1.5 + videoElement.width * 1.55;
+          y = rect.top + landmark.y * videoElement.height - image.height / 1.5 - videoElement.height * 0.35;
+
         }
 
         image.style.left = `${x}px`;
