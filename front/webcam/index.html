@@ -31,7 +31,7 @@
       .container {
         display: flex;
         justify-content: center;
-        align-items: center;
+        align-items: start;
         position: relative;
         height: 100%; /* 높이를 100%로 설정 */
         width: 100%;
@@ -40,7 +40,6 @@
       #video,
       #canvas {
         position: absolute;
-
         top: 65px;
       }
 
@@ -56,6 +55,7 @@
       }
 
       #saveLandmarksButton {
+        display: none;
         position: fixed;
         top: 20px;
         left: 50%;
@@ -71,6 +71,7 @@
         background-color: #45a049;
       }
       #landmarkDataDisplay {
+        display: none;
         position: fixed;
         top: 50%; /* 화면의 중간 높이 */
         right: 0; /* 화면의 오른쪽 끝 */
@@ -95,7 +96,7 @@
       #rightPanel {
         position: fixed;
         left: 900px;
-        top: 220px;
+        top: 65px;
         width: 500px; /* 너비 설정 */
         height: 600px; /* 전체 높이 */
         background-color: #fcfdf4; /* 기존 배경색보다 연한 색 */
