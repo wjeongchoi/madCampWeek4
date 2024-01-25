@@ -40,6 +40,7 @@ BE: Express, MySQL
 - 크롬 익스텐션을 사용할 때는, “CURVE chrome extension”을 찾아 사용합니다.
 
 <br/>
+
 ## 1 로그인
 <img src="./readmeImage/loginGIF.gif" height=360 width=640>
 <img src="./readmeImage/signUpGIF.gif" height=360 width=640>
