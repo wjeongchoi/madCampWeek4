@@ -237,7 +237,6 @@
 
           <video id="video" width="640" height="480" autoplay muted></video>
           <canvas id="canvas" width="640" height="480"></canvas>
-
         </div>
         <button
           id="saveLandmarksButton"
@@ -353,6 +352,10 @@
       //토스트 메시지 띄우기
 
       function placeImageAtLandmark(landmark, imageUrl, landmarkIndex) {
+        if (userSettings.screen !== 1) {
+          return; // userSettings.screen이 1이 아니면 이미지를 표시하지 않습니다.
+        }
+
         let image = images[landmarkIndex];
 
         if (!image) {
@@ -372,12 +375,27 @@
         let x, y;
 
         if (landmarkIndex == 12) {
-          x = rect.left + landmark.x * videoElement.width - image.width / 5 + videoElement.width * 0.9;
-          y = rect.top + landmark.y * videoElement.height - image.height / 5 - videoElement.height * 0.4;
+          x =
+            rect.left +
+            landmark.x * videoElement.width -
+            image.width / 5 +
+            videoElement.width * 0.9;
+          y =
+            rect.top +
+            landmark.y * videoElement.height -
+            image.height / 5 -
+            videoElement.height * 0.4;
         } else {
-          x = rect.left + (landmark.z - landmark7.z) * videoElement.width/10 - image.width / 1.5 + videoElement.width * 1.55;
-          y = rect.top + landmark.y * videoElement.height - image.height / 1.5 - videoElement.height * 0.35;
-
+          x =
+            rect.left +
+            ((landmark.z - landmark7.z) * videoElement.width) / 10 -
+            image.width / 1.5 +
+            videoElement.width * 1.55;
+          y =
+            rect.top +
+            landmark.y * videoElement.height -
+            image.height / 1.5 -
+            videoElement.height * 0.35;
         }
 
         image.style.left = `${x}px`;
@@ -420,8 +438,10 @@
         ctx.beginPath();
 
         // 시작점과 끝점 설정
-        const startX = start.x * canvasElement.width + canvasElement.width * 0.5;
-        const startY = start.y * canvasElement.height + canvasElement.height * 0.1;
+        const startX =
+          start.x * canvasElement.width + canvasElement.width * 0.5;
+        const startY =
+          start.y * canvasElement.height + canvasElement.height * 0.1;
         const endX = end.x * canvasElement.width + canvasElement.width * 0.5;
         const endY = end.y * canvasElement.height + canvasElement.height * 0.1;
 
@@ -765,6 +785,7 @@
       let userSettings = {};
 
       // 서버에서 사용자 설정을 가져오는 함수
+      // 서버에서 사용자 설정을 가져오는 함수
       function loadUserSettings() {
         const userId = localStorage.getItem("userId"); // localStorage에서 userId 가져오기
         if (!userId) {
@@ -782,6 +803,13 @@
           .then((data) => {
             userSettings = data;
             console.log("User settings loaded:", data); // 디버깅을 위한 로그
+
+            // 여기에서 rightPanel의 표시 여부를 결정
+            if (userSettings.screen === 1) {
+              document.getElementById("rightPanel").style.display = "block";
+            } else {
+              document.getElementById("rightPanel").style.display = "none";
+            }
           })
           .catch((error) => {
             console.error("Error loading user settings:", error);
